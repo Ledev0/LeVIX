@@ -24,20 +24,21 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 
 ## Features
 
-- **LSP** — Java (jdtls), Python (pyright), C/C++ (clangd), Lua
-- **Completion** — blink.cmp with LuaSnip snippets
-- **Debugger** — nvim-dap with UI for Python, C/C++, Java
-- **Formatter** — conform.nvim (format on save)
-- **Linter** — nvim-lint (lint on save)
-- **Git** — gitsigns + lazygit integration
-- **Fuzzy Finder** — Telescope with fzf
-- **File Explorer** — Neo-tree
-- **Terminal** — Toggleterm (float, horizontal, vertical)
-- **Navigation** — Harpoon, Flash.nvim
-- **Sessions** — auto-session
-- **UI** — Gruvbox, lualine, bufferline, noice, indent lines, colorizer
-- **Competitive Programming** — code runner for Java, Python, C, C++
-- **Tag Bar** — Show code outline by sidebar
+- **LSP** - Java (jdtls), Python (pyright), C/C++ (clangd), Lua
+- **Completion** - blink.cmp with LuaSnip snippets
+- **Debugger** - nvim-dap with UI for Python, C/C++, Java
+- **Formatter** - conform.nvim (format on save)
+- **Linter** - nvim-lint (lint on save)
+- **Git** - gitsigns + lazygit integration
+- **Fuzzy Finder** - Telescope with fzf
+- **File Explorer** - Neo-tree
+- **Terminal** - Toggleterm (float, horizontal, vertical)
+- **Navigation** - Harpoon, Flash.nvim
+- **Sessions** - auto-session
+- **UI** - Gruvbox, lualine, bufferline, noice, indent lines, colorizer
+- **Competitive Programming** - code runner for Java, Python, C, C++
+- **Tag Bar** - Show code outline by sidebar
+- **Zen Mode** - Code Like A Ghost  (WOOH!)
 ---
 
 ## Structure
@@ -48,15 +49,15 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 ├── lua/
 │   ├── config/lazy.lua
 │   ├── core/keymaps.lua
-│   └── plugins/
-│       ├── colorscheme, completion, competitive
+│   └── plugins/        
+│       ├── breadcrumbs, colorscheme, completion, competitive
 │       ├── cosmetics, debugger, effects
 │       ├── formatter, git, harpoon
 │       ├── indent, java-dap, linter
-│       ├── lsp, navigation, session
-│       ├── telescope, terminal, todo
+│       ├── lsp, navigation, rainbow, session
+│       ├── tagbar, telescope, terminal, todo
 │       ├── treesitter, ui, utilities
-│       └── which-key
+│       └── which-key, zen
 ```
 
 ---
@@ -95,6 +96,7 @@ nvim
 | `Space+w` | Save File |
 | `Space+q` | Quit |
 | `Space+co` | Code Outline |
+|  `Space+z` | Zen Mode |
 | `F5` | Debug Continue |
 | `F10` | Step Over |
 | `F11` | Step Into |
