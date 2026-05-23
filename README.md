@@ -1,6 +1,6 @@
 # LeVIX
 
-![LeVIX Dashboard](Main_Screen.png)
+![LeVIX Dashboard](Dashboard.png)
 
 > A handcrafted Neovim IDE built from scratch — every line written with purpose.
 
@@ -92,6 +92,8 @@ nvim
 | `Space+hh` | Harpoon Menu |
 | `Space+ss` | Save Session |
 | `Space+sr` | Restore Session |
+| `Space+w` | Save File |
+| `Space+q` | Quit |
 | `F5` | Debug Continue |
 | `F10` | Step Over |
 | `F11` | Step Into |
