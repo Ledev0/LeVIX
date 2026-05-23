@@ -96,7 +96,7 @@ nvim
 | `Space+w` | Save File |
 | `Space+q` | Quit |
 | `Space+co` | Code Outline |
-|  `Space+z` | Zen Mode |
+| `Space+z` | Zen Mode |
 | `F5` | Debug Continue |
 | `F10` | Step Over |
 | `F11` | Step Into |
