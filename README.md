@@ -37,7 +37,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **Sessions** — auto-session
 - **UI** — Gruvbox, lualine, bufferline, noice, indent lines, colorizer
 - **Competitive Programming** — code runner for Java, Python, C, C++
-
+- **Tag Bar** — Show code outline by sidebar
 ---
 
 ## Structure
@@ -94,6 +94,7 @@ nvim
 | `Space+sr` | Restore Session |
 | `Space+w` | Save File |
 | `Space+q` | Quit |
+| `Space+co` | Code Outline |
 | `F5` | Debug Continue |
 | `F10` | Step Over |
 | `F11` | Step Into |
