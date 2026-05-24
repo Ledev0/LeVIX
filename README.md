@@ -39,6 +39,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **Competitive Programming** - code runner for Java, Python, C, C++
 - **Tag Bar** - Show code outline by sidebar
 - **Zen Mode** - Code Like A Ghost  (WOOH!)
+- **OIL Explorer** - Edit Your Explorer Like a Code
 ---
 
 ## Structure
@@ -54,7 +55,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 │       ├── cosmetics, debugger, effects
 │       ├── formatter, git, harpoon
 │       ├── indent, java-dap, linter
-│       ├── lsp, navigation, rainbow, session
+│       ├── lsp, navigation, Oil, rainbow, session
 │       ├── tagbar, telescope, terminal, todo
 │       ├── treesitter, ui, utilities
 │       └── which-key, zen
@@ -97,6 +98,7 @@ nvim
 | `Space+q` | Quit |
 | `Space+co` | Code Outline |
 | `Space+z` | Zen Mode |
+|  `Space+o` | Oil Explorer |
 | `F5` | Debug Continue |
 | `F10` | Step Over |
 | `F11` | Step Into |
