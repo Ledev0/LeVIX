@@ -40,6 +40,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **Tag Bar** - Show code outline by sidebar
 - **Zen Mode** - Code Like A Ghost  (WOOH!)
 - **OIL Explorer** - Edit Your Explorer Like a Code
+- **Spectre** - Edit Like A Pro
 ---
 
 ## Structure
@@ -56,7 +57,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 │       ├── formatter, git, harpoon
 │       ├── indent, java-dap, linter
 │       ├── lsp, navigation, Oil, rainbow, session
-│       ├── tagbar, telescope, terminal, todo
+│       ├── spectre, tagbar, telescope, terminal, todo
 │       ├── treesitter, ui, utilities
 │       └── which-key, zen
 ```
@@ -98,7 +99,8 @@ nvim
 | `Space+q` | Quit |
 | `Space+co` | Code Outline |
 | `Space+z` | Zen Mode |
-|  `Space+o` | Oil Explorer |
+| `Space+o` | Oil Explorer |
+| `Space+S` | Toggle Spectre |
 | `F5` | Debug Continue |
 | `F10` | Step Over |
 | `F11` | Step Into |
