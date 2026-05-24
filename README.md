@@ -105,12 +105,38 @@ nvim
 
 ---
 
-## Requirements
+## 📋 Requirements & Prerequisites
 
-- Neovim >= 0.11
-- Git, Node.js, Java (JDK 21+), Python 3, Cargo (Rust)
-- A Nerd Font
+To ensure **LeVIX** runs flawlessly with all its features (LSP, Autocomplete, Treesitter, and Fuzzy Finding), your system must have the following dependencies installed:
+
+### 1. Core Editor
+* **Neovim >= 0.10.0** (Compiled with Lua support)
+* **Git** (Required by `lazy.nvim` to clone and update plugins)
+
+### 2. System Utilities (Required for Telescope & Core Tools)
+* **ripgrep (`rg`)**: Essential for ultra-fast text searching inside files.
+* **fd-find (`fd`)**: Required for fast file searching and navigation.
+* **curl**: Needed by `mason.nvim` to download and install LSP servers.
+* **unzip / tar**: Required to extract downloaded LSP packages.
+
+### 3. Build Tools (Required for Compiling Treesitter Parsers)
+* **C Compiler** (`gcc` or `clang`)
+* **make**
+
+### 4. Language Runtimes (For LSPs, Formatters & Debuggers)
+* **Node.js & npm**: Required for most web and scripting LSPs (like Pyright, TS/JS, Bash).
+* **Python 3 & pip**: Required for Python development tools.
+* **Java Development Kit (JDK >= 17)**: Required to run the Java LSP (`jdtls`).
+
+### 5. Terminal & UI Visuals (Crucial)
+* A **Nerd Font** must be installed and active in your terminal emulator (e.g., *JetBrainsMono Nerd Font*, *FiraCode Nerd Font*, or *Iosevka Nerd Font*). Without a Nerd Font, file icons, dashboard logos, and statusline symbols will render as broken squares.
 
 ---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Copyright (c) 2026-present Seif Amr [Ledev0]
 
 *Built with 🔥 by [Ledev0](https://github.com/Ledev0)*
