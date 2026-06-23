@@ -64,19 +64,6 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 
 ---
 
-## Install
-
-```bash
-# Backup your existing config
-mv ~/.config/nvim ~/.config/nvim.bak
-
-# Clone LeVIX
-git clone git@github.com:Ledev0/LeVIX.git ~/.config/nvim
-
-# Open Neovim and let lazy.nvim install everything
-nvim
-```
-
 ---
 
 ## Key Bindings
@@ -134,6 +121,21 @@ To ensure **LeVIX** runs flawlessly with all its features (LSP, Autocomplete, Tr
 
 ### 5. Terminal & UI Visuals (Crucial)
 * A **Nerd Font** must be installed and active in your terminal emulator (e.g., *JetBrainsMono Nerd Font*, *FiraCode Nerd Font*, or *Iosevka Nerd Font*). Without a Nerd Font, file icons, dashboard logos, and statusline symbols will render as broken squares.
+
+---
+
+## Install
+
+```bash
+# Backup your existing config
+mv ~/.config/nvim ~/.config/nvim.bak
+
+# Clone LeVIX
+git clone git@github.com:Ledev0/LeVIX.git ~/.config/nvim
+
+# Open Neovim and let lazy.nvim install everything
+nvim
+```
 
 ---
 
