@@ -131,7 +131,7 @@ This script automatically checks your Neovim version, installs missing dependenc
 
 ```bash
 # Just Put This line in your terminal and the distro will be done 
-curl -sSL https://raw.githubusercontent.com/Ledev0/LeVIX/main/install_deps.sh | bash
+curl -sSL https://raw.githubusercontent.com/Ledev0/LeVIX/main/install.sh | bash
 ```
 
 ---
