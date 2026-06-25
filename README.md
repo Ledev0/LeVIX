@@ -38,9 +38,10 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **UI** - Gruvbox, lualine, bufferline, noice, indent lines, colorizer
 - **Competitive Programming** - code runner for Java, Python, C, C++
 - **Tag Bar** - Show code outline by sidebar
-- **Zen Mode** - Code Like A Ghost  (WOOH!)
+- **Zen Mode** - Code Like A Ghost (WOOH!)
 - **OIL Explorer** - Edit Your Explorer Like a Code
 - **Spectre** - Edit Like A Pro
+- **Spelling** - To do not lost in typing
 ---
 
 ## Structure
@@ -57,14 +58,14 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 │       ├── formatter, git, harpoon
 │       ├── indent, java-dap, linter
 │       ├── lsp, navigation, Oil, rainbow, session
-│       ├── spectre, tagbar, telescope, terminal, todo
+│       ├── spectre, spell, tagbar, telescope, terminal, todo
 │       ├── treesitter, ui, utilities
 │       └── which-key, zen
 ```
 
 ---
 
----
+--- 
 
 ## Key Bindings
 
