@@ -127,15 +127,11 @@ To ensure **LeVIX** runs flawlessly with all its features (LSP, Autocomplete, Tr
 
 ## Install
 
+This script automatically checks your Neovim version, installs missing dependencies, safely backs up your old configuration to ~/.config/nvim.bak, and deploys the fresh LeVIX environment in one single command.
+
 ```bash
-# Backup your existing config
-mv ~/.config/nvim ~/.config/nvim.bak
-
-# Clone LeVIX
-git clone git@github.com:Ledev0/LeVIX.git ~/.config/nvim
-
-# Open Neovim and let lazy.nvim install everything
-nvim
+# Just Put This line in your terminal and the distro will be done 
+curl -sSL https://raw.githubusercontent.com/Ledev0/LeVIX/main/install_deps.sh | bash
 ```
 
 ---
