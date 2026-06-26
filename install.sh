@@ -1,5 +1,21 @@
 #!/bin/bash
 
+#Check if the distro was installed , it will upgrade it to latest version
+NVIM_CONFIG_DIR="$HOME/.config/nvim"
+
+if [ -d "$NVIM_CONFIG_DIR/.git" ]; then
+    echo "🌌 LeVIX detected! Initiating core system upgrade..."
+    cd "$NVIM_CONFIG_DIR" || exit
+    
+     git pull origin main
+    
+     nvim --headless "+Lazy! sync" +qa
+    
+    echo "✅ LeVIX has been successfully upgraded to the latest build!"
+    exit 0
+fi
+
+
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
