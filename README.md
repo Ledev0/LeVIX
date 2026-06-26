@@ -36,6 +36,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **OIL Explorer** - Edit Your Explorer Like a Code
 - **Spectre** - Edit Like A Pro
 - **Spelling** - To do not lost in typing
+- **Theme Switcher** - If you bored of default Theme
 ---
 
 ## Structure
@@ -52,8 +53,8 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 │       ├── formatter, git, harpoon
 │       ├── indent, java-dap, linter
 │       ├── lsp, navigation, Oil, rainbow, session
-│       ├── spectre, spell, tagbar, telescope, terminal, todo
-│       ├── treesitter, ui, utilities
+│       ├── spectre, spell, tagbar, telescope, terminal, themes 
+│       ├── todo, treesitter, ui, utilities
 │       └── which-key, zen
 ```
 
@@ -83,6 +84,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 | `Space+z` | Zen Mode |
 | `Space+o` | Oil Explorer |
 | `Space+S` | Toggle Spectre |
+| `Space+T` | Switch Themes |
 | `F5` | Debug Continue |
 | `F10` | Step Over |
 | `F11` | Step Into |
