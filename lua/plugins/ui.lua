@@ -84,6 +84,7 @@ return {
 		lazy = false,
 		config = function()
 			require("snacks").setup({
+				image = { enabled = false },
 				dashboard = {
 					enabled = true,
 					preset = {
@@ -116,6 +117,13 @@ return {
 					},
 				},
 			})
+		end,
+	},
+	{
+		"echasnovski/mini.icons",
+		version = false,
+		config = function()
+			require("mini.icons").setup()
 		end,
 	},
 }

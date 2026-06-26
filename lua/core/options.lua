@@ -61,22 +61,23 @@ vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSig
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
--- WSL Clipboard Fix
-if vim.fn.has("wsl") == 1 then
-	vim.g.clipboard = {
-		name = "WSL-Windows-Clipboard",
-		copy = {
-			["+"] = "clip.exe",
-			["*"] = "clip.exe",
-		},
-		paste = {
-			["+"] = 'powershell.exe -NoProfile -Command "Get-Clipboard"',
-			["*"] = 'powershell.exe -NoProfile -Command "Get-Clipboard"',
-		},
-		cache_enabled = 0,
-	}
-end
-
 -- Spelling
 vim.opt.spell = true
 vim.opt.spelllang = { "en_us" }
+
+-- background Themes
+vim.cmd([[highlight Normal guibg=none ctermbg=none]])
+vim.cmd([[highlight NonText guibg=none ctermbg=none]])
+
+-- Theme Cache
+local theme_cache = vim.fn.stdpath("config") .. "/.levix_theme_cache"
+local f = io.open(theme_cache, "r")
+if f then
+	local saved_theme = f:read("*all"):gsub("%s+", "")
+	f:close()
+	if saved_theme ~= "" then
+		vim.schedule(function()
+			pcall(vim.cmd, "colorscheme " .. saved_theme)
+		end)
+	end
+end
