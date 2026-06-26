@@ -1,19 +1,15 @@
--- Distro Updater
 vim.api.nvim_create_user_command("LeVIXUpdate", function()
 	print(" [LeVIX] Starting core empire updates...")
-
 	local has_lazy, lazy = pcall(require, "lazy")
 	if has_lazy then
 		print(" Updating plugins...")
 		lazy.sync({ wait = true })
 	end
 
-	print("🌳 Updating Treesitter parsers...")
+	print(" Updating Treesitter parsers...")
 	local has_ts, ts_install = pcall(require, "nvim-treesitter.install")
 	if has_ts then
 		ts_install.update({ with_sync = true })
-	else
-		pcall(vim.cmd, "TSUpdate")
 	end
 
 	local handle = io.popen("git -C " .. vim.fn.stdpath("config") .. " pull origin main 2>&1")
@@ -27,3 +23,32 @@ vim.api.nvim_create_user_command("LeVIXUpdate", function()
 		end
 	end
 end, {})
+
+local function check_for_updates()
+	local config_path = vim.fn.stdpath("config")
+	vim.fn.jobstart({ "git", "-C", config_path, "fetch", "origin", "main" }, {
+		on_exit = function(_, exit_code)
+			if exit_code == 0 then
+				vim.fn.jobstart({ "git", "-C", config_path, "rev-list", "HEAD...origin/main", "--count" }, {
+					stdout_buffered = true,
+					on_stdout = function(_, data)
+						local count = tonumber(data[1] or "0")
+						if count and count > 0 then
+							vim.schedule(function()
+								vim.notify(
+									"✨ New updates available for LeVIX! Run :LeVIXUpdate to pull changes.",
+									vim.log.levels.INFO,
+									{ title = "LeVIX System", timeout = 10000 }
+								)
+							end)
+						end
+					end,
+				})
+			end
+		end,
+	})
+end
+
+vim.defer_fn(function()
+	check_for_updates()
+end, 2000)
