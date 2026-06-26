@@ -38,7 +38,8 @@ declare -A deps=(
     ["fzf"]="fzf"
     ["node"]="nodejs"
     ["python3"]="python3"
-    ["cargo"]="rustc"
+    ["rust"]="rust"
+    ["cargo"]="cargo"
 )
 
 missing_deps=()
