@@ -1,8 +1,11 @@
--- Impprting Options
+-- Importing Options
 require("core.options")
 
--- Impprting Keymaps
+-- Importing keymaps
 require("core.keymaps")
 
--- Impprting Lazy The Pacakge Manager
+-- Importing Lazy The Package Manager
 require("config.lazy")
+
+-- Importing Commands
+require("core.commands")

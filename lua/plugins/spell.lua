@@ -1,5 +1,6 @@
 return {
 	"f3fora/cmp-spell",
+	event = "InsertEnter",
 	dependencies = { "hrsh7th/nvim-cmp" },
 	config = function()
 		local cmp = require("cmp")

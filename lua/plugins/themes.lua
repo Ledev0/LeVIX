@@ -48,7 +48,7 @@ return {
 					})
 				else
 					local themes = { "catppuccin", "tokyonight", "gruvbox", "rose-pine", "kanagawa" }
-					vim.ui.select(themes, { prompt = "🎨 Select LeVIX Theme:" }, function(choice)
+					vim.ui.select(themes, { prompt = "  Select LeVIX Theme:" }, function(choice)
 						if choice then
 							pcall(vim.cmd, "colorscheme " .. choice)
 							save_theme(choice)

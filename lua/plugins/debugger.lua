@@ -1,6 +1,8 @@
 return {
 	{
 		"mfussenegger/nvim-dap",
+		keys = { "<leader>db", "<leader>dc" },
+		event = "VeryLazy",
 		dependencies = {
 			"rcarriga/nvim-dap-ui",
 			"nvim-neotest/nvim-nio",
@@ -67,6 +69,7 @@ return {
 
 	{
 		"mfussenegger/nvim-dap-python",
+		keys = { "<leader>db", "<leader>dc" },
 		dependencies = { "mfussenegger/nvim-dap" },
 		config = function()
 			require("dap-python").setup("python3")

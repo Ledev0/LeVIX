@@ -1,4 +1,4 @@
-return { -- 2. NvChad Colorizer:
+return {
 	{
 		"NvChad/nvim-colorizer.lua",
 		event = { "BufReadPost", "BufNewFile" },
@@ -20,7 +20,6 @@ return { -- 2. NvChad Colorizer:
 		end,
 	},
 
-	-- 3. Noice
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
