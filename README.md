@@ -37,6 +37,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **Spectre** - Edit Like A Pro
 - **Spelling** - To do not lost in typing
 - **Theme Switcher** - If you bored of default Theme
+- **Distro Updater** - to be all done in development
 ---
 
 ## Structure
@@ -46,7 +47,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 ├── init.lua
 ├── lua/
 │   ├── config/lazy.lua
-│   ├── core/keymaps.lua
+│   ├── core/keymaps.lua,options.lua,commands.lua
 │   └── plugins/        
 │       ├── breadcrumbs, colorscheme, completion, competitive
 │       ├── cosmetics, debugger, effects
