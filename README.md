@@ -38,6 +38,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **Spelling** - To do not lost in typing
 - **Theme Switcher** - If you bored of default Theme
 - **Distro Updater** - to be all done in development
+- **Discord Rich Presence** - To be very cool in your chat 
 ---
 
 ## Structure
@@ -50,8 +51,8 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 │   ├── core/keymaps.lua, options.lua, commands.lua
 │   └── plugins/        
 │       ├── breadcrumbs, colorscheme, completion, competitive
-│       ├── cosmetics, debugger, effects
-│       ├── formatter, git, harpoon
+│       ├── cosmetics, debugger, discord, effects
+│       ├── formatter, git, harpoo
 │       ├── indent, java-dap, lazydev, linter
 │       ├── lsp, navigation, Oil, rainbow, session
 │       ├── spectre, spell, tagbar, telescope, terminal, themes 
