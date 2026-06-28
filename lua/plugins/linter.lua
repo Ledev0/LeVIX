@@ -11,7 +11,6 @@ return {
 			cpp = { "clangtidy" },
 		}
 
-		-- Auto lint on save and file open
 		vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
 			callback = function()
 				lint.try_lint()
