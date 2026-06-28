@@ -47,12 +47,12 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 ├── init.lua
 ├── lua/
 │   ├── config/lazy.lua
-│   ├── core/keymaps.lua,options.lua,commands.lua
+│   ├── core/keymaps.lua, options.lua, commands.lua
 │   └── plugins/        
 │       ├── breadcrumbs, colorscheme, completion, competitive
 │       ├── cosmetics, debugger, effects
 │       ├── formatter, git, harpoon
-│       ├── indent, java-dap, linter
+│       ├── indent, java-dap, lazydev, linter
 │       ├── lsp, navigation, Oil, rainbow, session
 │       ├── spectre, spell, tagbar, telescope, terminal, themes 
 │       ├── todo, treesitter, ui, utilities
