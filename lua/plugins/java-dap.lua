@@ -4,7 +4,7 @@ return {
 	config = function()
 		local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
 
-		local workspace_dir = "file:///" .. vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
+		local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
 
 		local config = {
 			cmd = { "jdtls", "-data", workspace_dir },
