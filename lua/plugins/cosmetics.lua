@@ -29,16 +29,16 @@ return {
 		},
 		config = function()
 			require("notify").setup({
-				stages = "fade_in_slide_out",
 				timeout = 3000,
 				fps = 60,
+				render = "compact",
+				merge_duplicates = true,
 			})
 			require("noice").setup({
 				lsp = {
 					override = {
 						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 						["vim.lsp.util.stylize_markdown"] = true,
-						["cmp.entry.get_documentation"] = true,
 					},
 				},
 				presets = {
