@@ -2,6 +2,7 @@ return {
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
+		event = "VeryLazy",
 		config = function()
 			require("lualine").setup({
 				options = {
@@ -26,6 +27,7 @@ return {
 		"akinsho/bufferline.nvim",
 		version = "*",
 		dependencies = "nvim-tree/nvim-web-devicons",
+		event = "VeryLazy",
 		config = function()
 			require("bufferline").setup({
 				options = {
@@ -36,29 +38,6 @@ return {
 			})
 			vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next Tab" })
 			vim.keymap.set("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Prev Tab" })
-		end,
-	},
-
-	{
-		"nvim-neo-tree/neo-tree.nvim",
-		branch = "v3.x",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"MunifTanjim/nui.nvim",
-		},
-		config = function()
-			require("neo-tree").setup({
-				close_if_last_window = true,
-				window = { width = 30 },
-				filesystem = {
-					filtered_items = {
-						hide_dotfiles = false,
-						hide_gitignored = false,
-					},
-				},
-			})
-			vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle Explorer" })
 		end,
 	},
 
@@ -104,7 +83,7 @@ return {
 							{ icon = "󰈞", key = "f", desc = "Find File", action = ":Telescope find_files" },
 							{ icon = "", key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
 							{ icon = "󰍩", key = "g", desc = "Find Text", action = ":Telescope live_grep" },
-							{ icon = "", key = "c", desc = "Config", action = ":Neotree toggle dir=~/.config/nvim" },
+							{ icon = "", key = "c", desc = "Config", action = ":Oil ~/.config/nvim" },
 							{ icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
 							{ icon = "󱌣", key = "m", desc = "Mason", action = ":Mason" },
 							{ icon = "󰈆", key = "q", desc = "Quit", action = ":qa" },
