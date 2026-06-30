@@ -25,7 +25,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **Linter** - nvim-lint (lint on save)
 - **Git** - gitsigns + lazygit integration
 - **Fuzzy Finder** - Telescope with fzf
-- **File Explorer** - Neo-tree
+- **File Explorer** - Oil.nvim
 - **Terminal** - Toggleterm (float, horizontal, vertical)
 - **Navigation** - Harpoon, Flash.nvim
 - **Sessions** - auto-session
@@ -35,7 +35,6 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **Zen Mode** - Code Like A Ghost (WOOH!)
 - **OIL Explorer** - Edit Your Explorer Like a Code
 - **Spectre** - Edit Like A Pro
-- **Spelling** - To do not lost in typing
 - **Theme Switcher** - If you bored of default Theme
 - **Distro Updater** - to be all done in development
 - **Discord Rich Presence** - To be very cool in your chat 
@@ -52,10 +51,10 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 │   └── plugins/        
 │       ├── breadcrumbs, colorscheme, completion, competitive
 │       ├── cosmetics, debugger, discord, effects
-│       ├── formatter, git, harpoo
-│       ├── indent, java-dap, lazydev, linter
-│       ├── lsp, navigation, Oil, rainbow, session
-│       ├── spectre, spell, tagbar, telescope, terminal, themes 
+│       ├── formatter, git, harpoon
+│       ├── indent, java-dap, java-tools, lazydev, linter
+│       ├── lsp, navigation, oil, rainbow, session
+│       ├── spectre, tagbar, telescope, terminal, themes 
 │       ├── todo, treesitter, ui, utilities
 │       └── which-key, zen
 ```
@@ -100,7 +99,7 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 To ensure **LeVIX** runs flawlessly with all its features (LSP, Autocomplete, Treesitter, and Fuzzy Finding), your system must have the following dependencies installed:
 
 ### 1. Core Editor
-* **Neovim >= 0.10.0** (Compiled with Lua support)
+* **Neovim >= 0.12.0** (Compiled with Lua support)
 * **Git** (Required by `lazy.nvim` to clone and update plugins)
 
 ### 2. System Utilities (Required for Telescope & Core Tools)
@@ -112,11 +111,14 @@ To ensure **LeVIX** runs flawlessly with all its features (LSP, Autocomplete, Tr
 ### 3. Build Tools (Required for Compiling Treesitter Parsers)
 * **C Compiler** (`gcc` or `clang`)
 * **make**
+* **Rust & cargo**: Required to build `blink.cmp`'s fuzzy matcher.
 
 ### 4. Language Runtimes (For LSPs, Formatters & Debuggers)
 * **Node.js & npm**: Required for most web and scripting LSPs (like Pyright, TS/JS, Bash).
 * **Python 3 & pip**: Required for Python development tools.
+* **ruff**: Required for Python linting and formatting (`pip install --user ruff` or `dnf install ruff`).
 * **Java Development Kit (JDK >= 17)**: Required to run the Java LSP (`jdtls`).
+* **clang-tools-extra**: Provides `clang-tidy` for C/C++ linting (`dnf install clang-tools-extra` or `apt install clang-tidy`).
 
 ### 5. Terminal & UI Visuals (Crucial)
 * A **Nerd Font** must be installed and active in your terminal emulator (e.g., *JetBrainsMono Nerd Font*, *FiraCode Nerd Font*, or *Iosevka Nerd Font*). Without a Nerd Font, file icons, dashboard logos, and statusline symbols will render as broken squares.
