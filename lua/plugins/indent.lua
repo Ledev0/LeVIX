@@ -1,6 +1,7 @@
 return {
 	"lukas-reineke/indent-blankline.nvim",
 	main = "ibl",
+	event = "BufReadPost",
 	config = function()
 		local hooks = require("ibl.hooks")
 		hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
