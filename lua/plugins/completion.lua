@@ -20,6 +20,7 @@ return {
 		dependencies = {
 			"saghen/blink.lib",
 			"L3MON4D3/LuaSnip",
+			"ribru17/blink-cmp-spell",
 		},
 		event = "InsertEnter",
 		config = function()
@@ -39,7 +40,16 @@ return {
 					},
 				},
 				sources = {
-					default = { "lsp", "path", "snippets", "buffer" },
+					default = { "lsp", "path", "snippets", "buffer", "spell" },
+					providers = {
+						spell = {
+							name = "Spell",
+							module = "blink-cmp-spell",
+							opts = {
+								keep_all_entries = false,
+							},
+						},
+					},
 				},
 				snippets = { preset = "luasnip" },
 				signature = { enabled = true },
