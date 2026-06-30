@@ -29,7 +29,7 @@ return {
 						layout_config = {
 							width = 0.25,
 							height = 0.3,
-							prompt_position = top,
+							prompt_position = "top",
 							preview_cutoff = 1,
 						},
 						attach_mappings = function(_, map)
