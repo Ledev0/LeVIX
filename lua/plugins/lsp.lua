@@ -1,6 +1,7 @@
 return {
 	{
 		"williamboman/mason.nvim",
+		cmd = { "Mason", "MasonInstall", "MasonUpdate" },
 		config = function()
 			require("mason").setup({
 				ui = {
@@ -20,7 +21,7 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "pyright", "clangd" },
+				ensure_installed = { "pyright", "clangd", "ruff" },
 				automatic_installation = true,
 			})
 		end,
@@ -30,9 +31,18 @@ return {
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
-			vim.lsp.config("pyright", {})
+			vim.lsp.config("pyright", {
+				settings = {
+					python = {
+						analysis = {
+							typeCheckingMode = "basic",
+						},
+					},
+				},
+			})
+			vim.lsp.config("ruff", {})
 			vim.lsp.config("clangd", {})
-			vim.lsp.enable({ "pyright", "clangd" })
+			vim.lsp.enable({ "pyright", "ruff", "clangd" })
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				callback = function(args)
@@ -45,8 +55,12 @@ return {
 					map("K", vim.lsp.buf.hover, "Hover Documentation")
 					map("<leader>cr", vim.lsp.buf.rename, "Rename")
 					map("<leader>ca", vim.lsp.buf.code_action, "Code Action")
-					map("[d", vim.diagnostic.goto_prev, "Previous Diagnostic")
-					map("]d", vim.diagnostic.goto_next, "Next Diagnostic")
+					map("[d", function()
+						vim.diagnostic.jump({ count = -1, float = true })
+					end, "Previous Diagnostic")
+					map("]d", function()
+						vim.diagnostic.jump({ count = 1, float = true })
+					end, "Next Diagnostic")
 				end,
 			})
 		end,
