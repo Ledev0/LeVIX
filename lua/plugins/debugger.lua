@@ -1,8 +1,7 @@
 return {
 	{
 		"mfussenegger/nvim-dap",
-		keys = { "<leader>db", "<leader>dc" },
-		event = "VeryLazy",
+		keys = { "<F5>", "<F10>", "<F11>", "<F12>", "<leader>db", "<leader>du" },
 		dependencies = {
 			"rcarriga/nvim-dap-ui",
 			"nvim-neotest/nvim-nio",
@@ -49,7 +48,6 @@ return {
 			}
 			dap.configurations.c = dap.configurations.cpp
 
-			-- Auto open/close UI
 			dap.listeners.after.event_initialized["dapui_config"] = function()
 				dapui.open()
 			end
@@ -57,7 +55,6 @@ return {
 				dapui.close()
 			end
 
-			-- Keymaps
 			vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Continue" })
 			vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
 			vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
@@ -69,7 +66,7 @@ return {
 
 	{
 		"mfussenegger/nvim-dap-python",
-		keys = { "<leader>db", "<leader>dc" },
+		ft = "python",
 		dependencies = { "mfussenegger/nvim-dap" },
 		config = function()
 			require("dap-python").setup("python3")
