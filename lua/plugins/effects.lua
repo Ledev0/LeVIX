@@ -18,17 +18,18 @@ return {
 		dependencies = {
 			"anuvyklack/middleclass",
 			"anuvyklack/animation.nvim",
-			config = function()
-				vim.o.winwidth = 10
-				vim.o.winminwidth = 10
-				vim.o.equalalways = false
-				require("windows").setup({
-					animation = {
-						enable = true,
-						duration = 250,
-					},
-				})
-			end,
 		},
+		event = "BufReadPost",
+		config = function()
+			vim.o.winwidth = 10
+			vim.o.winminwidth = 10
+			vim.o.equalalways = false
+			require("windows").setup({
+				animation = {
+					enable = true,
+					duration = 250,
+				},
+			})
+		end,
 	},
 }
