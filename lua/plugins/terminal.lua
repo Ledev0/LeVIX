@@ -24,7 +24,8 @@ return {
 				end,
 			})
 
-			function _LAZYGIT_TOGGLE()
+			_G.LeVIX = _G.LeVIX or {}
+			_G.LeVIX.lazygit_toggle = function()
 				lazygit:toggle()
 			end
 
