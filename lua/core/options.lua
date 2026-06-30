@@ -81,3 +81,6 @@ if f then
 		end)
 	end
 end
+
+-- Disable Folding
+vim.opt.foldenable = false
