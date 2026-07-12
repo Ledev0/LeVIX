@@ -45,3 +45,5 @@ keymap("n", "<leader>gp", "<cmd>lua require('gitsigns').preview_hunk()<CR>", { d
 keymap("n", "<leader>gr", "<cmd>lua require('gitsigns').reset_hunk()<CR>", { desc = "Reset Line Change" })
 -- Lazygit integrated through ToggleTerm
 keymap("n", "<leader>gg", "<cmd>lua LeVIX.lazygit_toggle()<CR>", { desc = "Toggle Lazygit" })
+
+

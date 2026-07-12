@@ -62,9 +62,13 @@ vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSig
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
 -- Spelling
-vim.opt.spell = true
 vim.opt.spelllang = { "en_us" }
-
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "text", "gitcommit" },
+	callback = function()
+		vim.opt_local.spell = true
+	end,
+})
 -- background Themes
 vim.cmd([[highlight Normal guibg=none ctermbg=none]])
 vim.cmd([[highlight NonText guibg=none ctermbg=none]])
