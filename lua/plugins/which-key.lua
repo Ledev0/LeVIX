@@ -23,22 +23,6 @@ return {
 			{ "<leader>d", group = " Debug" },
 			{ "<leader>r", group = " Run" },
 
-			{ "<leader>j", group = "⚡Flash Jump" },
-			{
-				"<leader>jj",
-				function()
-					require("flash").jump()
-				end,
-				desc = "Flash Motion",
-			},
-			{
-				"<leader>js",
-				function()
-					require("flash").treesitter()
-				end,
-				desc = "Flash Treesitter Scope",
-			},
-
 			{ "<leader>m", group = " Todo Tags" },
 			{ "<leader>mt", "<cmd>TodoTelescope<CR>", desc = "Search Project Todos" },
 			{ "<leader>ml", "<cmd>TodoLocList<CR>", desc = "List Local Todos" },
