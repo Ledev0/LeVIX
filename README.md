@@ -12,7 +12,7 @@
 
 LeVIX is not a distribution. It's a personal Neovim configuration built from zero — no LazyVim, no NvChad, no shortcuts. Every plugin was chosen, every keymap was set, every line was written and understood.
 
-Built by a developer learning Java, competing in Codeforces, and refusing to use an IDE he doesn't control.
+Built by a developer learning numerous Programming languages and refusing to use an IDE he doesn't control.
 
 ---
 
@@ -25,19 +25,17 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 - **Linter** - nvim-lint (lint on save)
 - **Git** - gitsigns + lazygit integration
 - **Fuzzy Finder** - Telescope with fzf
-- **File Explorer** - Oil.nvim
 - **Terminal** - Toggleterm (float, horizontal, vertical)
-- **Navigation** - Harpoon, Flash.nvim
+- **Navigation** - Harpoon
 - **Sessions** - auto-session
-- **UI** - Gruvbox, lualine, bufferline, noice, indent lines, colorizer
+- **UI** - Gruvbox, lualine, bufferline, colorizer
 - **Competitive Programming** - code runner for Java, Python, C, C++
-- **Tag Bar** - Show code outline by sidebar
 - **Zen Mode** - Code Like A Ghost (WOOH!)
 - **OIL Explorer** - Edit Your Explorer Like a Code
-- **Spectre** - Edit Like A Pro
 - **Theme Switcher** - If you bored of default Theme
 - **Distro Updater** - to be all done in development
-- **Discord Rich Presence** - To be very cool in your chat 
+- **Discord Rich Presence** - To be very cool in your chat
+- **Distro Health Checker** - to not be sick in your coding
 ---
 
 ## Structure
@@ -46,15 +44,15 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 ~/.config/nvim/
 ├── init.lua
 ├── lua/
-│   ├── config/lazy.lua
-│   ├── core/keymaps.lua, options.lua, commands.lua
+│   ├── config/lazy
+│   ├── core/keymaps, options, commands, Levix
 │   └── plugins/        
-│       ├── breadcrumbs, colorscheme, completion, competitive
-│       ├── cosmetics, debugger, discord, effects
+│       ├── code-runner, colorscheme, completion,
+│       ├── cosmetics, debugger, discord,
 │       ├── formatter, git, harpoon
-│       ├── indent, java-dap, java-tools, lazydev, linter
-│       ├── lsp, navigation, oil, rainbow, session
-│       ├── spectre, tagbar, telescope, terminal, themes 
+│       ├── java-dap, java-tools, lazydev, linter
+│       ├── lsp, oil, session
+│       ├── telescope, terminal, themes 
 │       ├── todo, treesitter, ui, utilities
 │       └── which-key, zen
 ```
@@ -81,10 +79,8 @@ Built by a developer learning Java, competing in Codeforces, and refusing to use
 | `Space+sr` | Restore Session |
 | `Space+w` | Save File |
 | `Space+q` | Quit |
-| `Space+co` | Code Outline |
 | `Space+z` | Zen Mode |
 | `Space+o` | Oil Explorer |
-| `Space+S` | Toggle Spectre |
 | `Space+T` | Switch Themes |
 | `F5` | Debug Continue |
 | `F10` | Step Over |
