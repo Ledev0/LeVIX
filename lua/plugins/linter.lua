@@ -9,6 +9,12 @@ return {
 			python = { "ruff" },
 			c = { "clangtidy" },
 			cpp = { "clangtidy" },
+			html = { "htmlhint" },
+			css = { "stylelint" },
+			javascript = { "eslint_d" },
+			javascriptreact = { "eslint_d" },
+			typescript = { "eslint_d" },
+			typescriptreact = { "eslint_d" },
 		}
 
 		local executable_map = {

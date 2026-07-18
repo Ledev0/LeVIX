@@ -11,6 +11,12 @@ return {
 				c = { "clang-format" },
 				cpp = { "clang-format" },
 				lua = { "stylua" },
+				html = { "prettier" },
+				css = { "prettier" },
+				javascript = { "prettier" },
+				javascriptreact = { "prettier" },
+				typescript = { "prettier" },
+				typescriptreact = { "prettier" },
 			},
 		})
 
@@ -43,7 +49,7 @@ return {
 					end
 				end
 
-				conform.format({ bufnr = args.buf, timeout_ms = 500, lsp_fallback = true })
+				conform.format({ bufnr = args.buf, timeout_ms = 3000, lsp_fallback = true })
 			end,
 		})
 

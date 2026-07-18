@@ -6,7 +6,9 @@ return {
 	{ "ellisonleao/gruvbox.nvim", lazy = true },
 	{ "rose-pine/neovim", name = "rose-pine", lazy = true },
 	{ "rebelot/kanagawa.nvim", lazy = true },
-
+	{ "xero/miasma.nvim", lazy = true },
+	{ "aliqyan-21/darkvoid.nvim", lazy = true },
+    { 'dasupradyumna/midnight.nvim', lazy = false, },
 	{
 		"folke/which-key.nvim",
 		init = function()
@@ -27,8 +29,8 @@ return {
 						previewer = false,
 						layout_strategy = "center",
 						layout_config = {
-							width = 0.25,
-							height = 0.3,
+							width = 50,
+							height = 20,
 							prompt_position = "top",
 							preview_cutoff = 1,
 						},
