@@ -16,6 +16,7 @@
 - [Commands](#commands)
 - [Keybindings](#keybindings)
 - [Project Scaffolding](#project-scaffolding--levixnewweb)
+- [Install](#install)
 - [Installer](#installer)
 - [Dependencies](#dependencies)
 - [Health Checks](#health-checks)
@@ -511,6 +512,32 @@ Template contents for `templates/frontend/`:
 | `<leader>m` | Todo Tags |
 | `<leader>h` | Harpoon Jump |
 | `<leader>s` | Sessions Management |
+
+---
+
+## Install
+
+> **Before running any script, it is a good idea to read through it first.**
+
+Dry-run syntax check:
+
+```bash
+bash -n install.sh
+```
+
+Clone the repo and run it locally:
+
+```bash
+git clone https://github.com/Ledev0/LeVIX.git
+cd LeVIX
+bash install.sh
+```
+
+One-line curl install (after review):
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Ledev0/LeVIX/main/install.sh | bash
+```
 
 ---
 
