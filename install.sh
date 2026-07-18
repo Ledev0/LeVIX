@@ -23,6 +23,15 @@ CYAN="\033[1;36m"
 RESET="\033[0m"
 
 
+if command -v doas &> /dev/null; then
+    SUDO="doas"
+elif command -v sudo &> /dev/null; then
+    SUDO="sudo"
+else
+    SUDO=""
+fi
+
+
 clear
 echo -e "${CYAN}"
 echo "    __         _    _______  __"
@@ -37,19 +46,19 @@ echo -e "${YELLOW}===> Welcome to the LeVIX Installer <===${RESET}\n"
 echo -e "${CYAN}[1/5] Checking Neovim installation...${RESET}"
 
 if [ -f /etc/arch-release ]; then
-    PM="sudo pacman -Sy --needed --ask=20"
+    PM="$SUDO pacman -Sy --needed --ask=20"
     PKG_FD="fd"
     PKG_PYTHON3="python"
 elif [ -f /etc/debian_version ]; then
-    PM="sudo apt update; sudo apt install -y"
+    PM="$SUDO apt update; $SUDO apt install -y"
     PKG_FD="fd-find"
     PKG_PYTHON3="python3"
 elif [ -f /etc/fedora-release ]; then
-    PM="sudo dnf install -y"
+    PM="$SUDO dnf install -y"
     PKG_FD="fd-find"
     PKG_PYTHON3="python3"
 elif [ -f /etc/void-release ] || grep -q "^ID=void" /etc/os-release 2>/dev/null; then
-    PM="sudo xbps-install -S -y"
+    PM="$SUDO xbps-install -S -y"
     PKG_FD="fd-find"
     PKG_PYTHON3="python3"
 else
@@ -69,7 +78,7 @@ download_appimage() {
     fi
 
     chmod u+x /tmp/nvim.appimage
-    sudo mv /tmp/nvim.appimage /usr/local/bin/nvim
+    $SUDO mv /tmp/nvim.appimage /usr/local/bin/nvim
     return 0
 }
 
@@ -87,12 +96,12 @@ install_or_upgrade_nvim() {
         # Debian/Ubuntu's default apt repos are usually far behind upstream.
         # Use the official Neovim PPA for an up-to-date build.
         if ! command -v add-apt-repository &> /dev/null; then
-            sudo apt update
-            sudo apt install -y software-properties-common
+            $SUDO apt update
+            $SUDO apt install -y software-properties-common
         fi
-        sudo add-apt-repository -y ppa:neovim-ppa/stable
-        sudo apt update
-        sudo apt install -y neovim
+        $SUDO add-apt-repository -y ppa:neovim-ppa/stable
+        $SUDO apt update
+        $SUDO apt install -y neovim
 
         # Fallback if the PPA build still doesn't meet the version requirement
         if command -v nvim &> /dev/null; then
@@ -175,7 +184,7 @@ if [ ${#missing_deps[@]} -ne 0 ]; then
 
     if [ -z "$PM" ]; then
         echo -e "${YELLOW}⚠️  Unsupported package manager. Please install manually:${RESET}"
-        echo -e "  ${YELLOW}sudo apt install ${missing_deps[*]}${RESET}"
+        echo -e "  ${YELLOW}$SUDO apt install ${missing_deps[*]}${RESET}"
         echo -e "  ${YELLOW}  (or use your distro's package manager)${RESET}"
     else
         echo -e "${CYAN}Installing missing dependencies...${RESET}"
@@ -269,7 +278,7 @@ for lang in "${selected_langs[@]}"; do
                 if npm install -g prettier htmlhint stylelint eslint_d; then
                     echo -e "  ${GREEN}✓${RESET} Web dev tools installed successfully."
                 else
-                    echo -e "  ${YELLOW}⚠${RESET}  npm install failed (may need sudo). Try: sudo npm install -g prettier htmlhint stylelint eslint_d"
+                    echo -e "  ${YELLOW}⚠${RESET}  npm install failed (may need $SUDO). Try: $SUDO npm install -g prettier htmlhint stylelint eslint_d"
                 fi
             else
                 echo -e "  ${RED}✗${RESET} npm not found. Please install Node.js/npm first."
