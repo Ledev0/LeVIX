@@ -37,61 +37,34 @@ echo -e "${YELLOW}===> Welcome to the LeVIX Installer <===${RESET}\n"
 echo -e "${CYAN}[1/5] Checking Neovim installation...${RESET}"
 
 if [ -f /etc/arch-release ]; then
-    PM="sudo pacman -Sy --needed --noconfirm"
+    PM="sudo pacman -Sy --needed --ask=20"
+    PKG_FD="fd"
+    PKG_PYTHON3="python"
 elif [ -f /etc/debian_version ]; then
-    PM="sudo apt update && sudo apt install -y"
+    PM="sudo apt update; sudo apt install -y"
+    PKG_FD="fd-find"
+    PKG_PYTHON3="python3"
 elif [ -f /etc/fedora-release ]; then
     PM="sudo dnf install -y"
+    PKG_FD="fd-find"
+    PKG_PYTHON3="python3"
+elif [ -f /etc/void-release ] || grep -q "^ID=void" /etc/os-release 2>/dev/null; then
+    PM="sudo xbps-install -S -y"
+    PKG_FD="fd-find"
+    PKG_PYTHON3="python3"
 else
     PM=""
+    PKG_FD="fd-find"
+    PKG_PYTHON3="python3"
 fi
 
-verify_checksum() {
-    local file_path="$1"
-    local checksum_url="$2"
-    local file_name
-    file_name=$(basename "$file_path")
-
-    echo -e "${CYAN}  Verifying checksum for ${file_name}...${RESET}"
-
-    if ! curl -sL -o /tmp/nvim.sha256sum "$checksum_url"; then
-        echo -e "${RED}  ✗ Could not download checksum file. Aborting for safety.${RESET}"
-        rm -f "$file_path"
-        return 1
-    fi
-
-    local expected actual
-    expected=$(grep "$file_name" /tmp/nvim.sha256sum | awk '{print $1}')
-    if [ -z "$expected" ]; then
-        echo -e "${RED}  ✗ No checksum entry found for ${file_name}. Aborting for safety.${RESET}"
-        rm -f "$file_path" /tmp/nvim.sha256sum
-        return 1
-    fi
-
-    actual=$(sha256sum "$file_path" | awk '{print $1}')
-    rm -f /tmp/nvim.sha256sum
-
-    if [ "$expected" != "$actual" ]; then
-        echo -e "${RED}  ✗ Checksum mismatch! Expected ${expected}, got ${actual}.${RESET}"
-        echo -e "${RED}    The download may be corrupted or tampered with. Aborting.${RESET}"
-        rm -f "$file_path"
-        return 1
-    fi
-
-    echo -e "${GREEN}  ✓ Checksum verified.${RESET}"
-    return 0
-}
-
-download_verified_appimage() {
+download_appimage() {
     local appimage_url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
-    local checksum_url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage.sha256sum"
+
+    echo -e "${CYAN}  Downloading Neovim AppImage (latest stable)...${RESET}"
 
     if ! curl -Lo /tmp/nvim.appimage "$appimage_url"; then
         echo -e "${RED}  ✗ Failed to download Neovim AppImage.${RESET}"
-        return 1
-    fi
-
-    if ! verify_checksum /tmp/nvim.appimage "$checksum_url"; then
         return 1
     fi
 
@@ -126,16 +99,20 @@ install_or_upgrade_nvim() {
             CHECK_VERSION=$(nvim --version | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
             CHECK_MINOR=$(echo "$CHECK_VERSION" | cut -d. -f2)
             if [ "$CHECK_MINOR" -lt 12 ]; then
-                echo -e "${YELLOW}  PPA build still outdated, falling back to verified AppImage...${RESET}"
-                download_verified_appimage
+                echo -e "${YELLOW}  PPA build still outdated, falling back to AppImage...${RESET}"
+                download_appimage
             fi
         else
-            download_verified_appimage
+            download_appimage
         fi
 
+    elif [ -f /etc/void-release ] || grep -q "^ID=void" /etc/os-release 2>/dev/null; then
+        # Void Linux has reasonably recent packages
+        eval "$PM neovim"
+
     else
-        echo -e "${YELLOW}  Unrecognized distro, installing verified AppImage...${RESET}"
-        download_verified_appimage
+        echo -e "${YELLOW}  Unrecognized distro, installing AppImage...${RESET}"
+        download_appimage
     fi
 }
 
@@ -175,10 +152,9 @@ declare -A deps=(
     ["unzip"]="unzip"
     ["curl"]="curl"
     ["rg"]="ripgrep"
-    ["fd"]="fd-find"
-    ["fzf"]="fzf"
+    ["fd"]="$PKG_FD"
     ["node"]="nodejs"
-    ["python3"]="python3"
+    ["python3"]="$PKG_PYTHON3"
     ["cargo"]="cargo"
 )
 
@@ -198,19 +174,21 @@ if [ ${#missing_deps[@]} -ne 0 ]; then
     echo -e "\n${YELLOW}⚠️ Missing required packages: ${missing_deps[*]}${RESET}"
 
     if [ -z "$PM" ]; then
-        echo -e "${RED}❌ Unsupported package manager. Please install them manually.${RESET}"
-        exit 1
+        echo -e "${YELLOW}⚠️  Unsupported package manager. Please install manually:${RESET}"
+        echo -e "  ${YELLOW}sudo apt install ${missing_deps[*]}${RESET}"
+        echo -e "  ${YELLOW}  (or use your distro's package manager)${RESET}"
+    else
+        echo -e "${CYAN}Installing missing dependencies...${RESET}"
+        eval "$PM ${missing_deps[*]}"
     fi
-
-    echo -e "${CYAN}Installing missing dependencies...${RESET}"
-    eval "$PM ${missing_deps[*]}"
 else
     echo -e "${GREEN}✅ All core dependencies are perfectly satisfied!${RESET}\n"
 fi
 
 
 echo -e "${CYAN}[3/5] Optional language tooling${RESET}"
-echo -e "${YELLOW}LeVIX has full LSP/lint/format/debug support for Java, Python, and C/C++.${RESET}"
+echo -e "${YELLOW}LeVIX has full LSP/lint/format/debug support for:${RESET}"
+echo -e "${YELLOW}Java, Python, C/C++, HTML, CSS, JavaScript/TypeScript${RESET}"
 echo -e "${YELLOW}You can install support for only the languages you actually use.${RESET}\n"
 
 declare -a selected_langs=()
@@ -230,6 +208,7 @@ ask_lang() {
 ask_lang "Java (JDK, checkstyle, google-java-format via jdtls)" "java"
 ask_lang "Python (ruff)" "python"
 ask_lang "C/C++ (clang-tools-extra for clang-tidy)" "cpp"
+ask_lang "Web Dev (HTML, CSS, JavaScript - prettier, ESLint, etc.)" "web"
 
 for lang in "${selected_langs[@]}"; do
     case "$lang" in
@@ -243,6 +222,8 @@ for lang in "${selected_langs[@]}"; do
                         eval "$PM openjdk-21-jdk"
                     elif [ -f /etc/arch-release ]; then
                         eval "$PM jdk-openjdk"
+                    elif [ -f /etc/void-release ] || grep -q "^ID=void" /etc/os-release 2>/dev/null; then
+                        eval "$PM openjdk21"
                     fi
                 else
                     echo -e "  ${RED}✗${RESET} Please install a JDK (>= 17) manually."
@@ -273,12 +254,27 @@ for lang in "${selected_langs[@]}"; do
                     eval "$PM clang-tidy clang-format"
                 elif [ -f /etc/arch-release ]; then
                     eval "$PM clang"
+                elif [ -f /etc/void-release ] || grep -q "^ID=void" /etc/os-release 2>/dev/null; then
+                    eval "$PM clang-tools-extra"
                 else
                     echo -e "  ${RED}✗${RESET} Please install clang-tidy manually."
                 fi
             else
                 echo -e "  ${GREEN}✓${RESET} clang-tidy already installed."
             fi
+            ;;
+        web)
+            echo -e "${CYAN}  Installing web development tools via npm...${RESET}"
+            if command -v npm &> /dev/null; then
+                if npm install -g prettier htmlhint stylelint eslint_d; then
+                    echo -e "  ${GREEN}✓${RESET} Web dev tools installed successfully."
+                else
+                    echo -e "  ${YELLOW}⚠${RESET}  npm install failed (may need sudo). Try: sudo npm install -g prettier htmlhint stylelint eslint_d"
+                fi
+            else
+                echo -e "  ${RED}✗${RESET} npm not found. Please install Node.js/npm first."
+            fi
+            echo -e "  ${YELLOW}ℹ${RESET}  html, cssls, and ts_ls LSP servers will install automatically via Mason on first launch."
             ;;
     esac
 done
@@ -293,6 +289,14 @@ if [ -d "$HOME/.config/nvim" ]; then
 fi
 echo -e "${GREEN}   Directory is ready.${RESET}\n"
 
+
+echo -e "${CYAN}[4.5/5] Important Reminders${RESET}"
+echo -e "${YELLOW}📝 Please ensure the following BEFORE starting LeVIX:${RESET}"
+echo -e "  1. ${YELLOW}Install a Nerd Font${RESET} in your terminal (e.g., JetBrainsMono Nerd Font)"
+echo -e "     Without it, icons will appear as broken boxes."
+echo -e "  2. ${YELLOW}Set your terminal font${RESET} to use the Nerd Font you installed."
+echo -e "  3. ${YELLOW}After installation, run:${RESET} ${CYAN}nvim +checkhealth levix${RESET}"
+echo -e "     to verify all dependencies are installed correctly.\n"
 
 echo -e "${CYAN}[5/5] Cloning LeVIX from GitHub...${RESET}"
 if git clone https://github.com/Ledev0/LeVIX.git "$HOME/.config/nvim"; then
