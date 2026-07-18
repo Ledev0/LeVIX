@@ -1,0 +1,10 @@
+{
+  "name": "frontend-project",
+  "devDependencies": {
+    "typescript": "latest",
+    "eslint": "latest",
+    "prettier": "latest",
+    "stylelint": "latest",
+    "stylelint-config-standard": "latest"
+  }
+}
