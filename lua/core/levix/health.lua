@@ -23,6 +23,12 @@ function M.check()
 	check_executable("g++", "Required for C++ compiling")
 	check_executable("clang-tidy", "Install clang-tools-extra for linting")
 
+	vim.health.start("LeVIX — Web Development Tools")
+	check_executable("prettier", "npm install -g prettier")
+	check_executable("htmlhint", "npm install -g htmlhint")
+	check_executable("stylelint", "npm install -g stylelint")
+	check_executable("eslint_d", "npm install -g eslint_d")
+
 	vim.health.start("LeVIX — Build Requirements")
 	check_executable("cargo", "Required to build blink.cmp's fuzzy matcher")
 	check_executable("make", "Required for Treesitter parsers")
