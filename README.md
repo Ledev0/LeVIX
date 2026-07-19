@@ -287,10 +287,6 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 **`vyfor/cord.nvim`** — Shows current editing activity on Discord profile. Minecraft theme, dark flavor, shows time, full view. Button links to LeVIX repository.
 
-### WakaTime
-
-**`wakatime/vim-wakatime`** — Automatic coding activity tracking. `lazy = false`.
-
 ### Lua Development
 
 **`folke/lazydev.nvim`** — Provides Neovim Lua API type annotations and completion for `vim.*`, `require()`, etc. Filetype-restricted to Lua buffers.
@@ -517,15 +513,22 @@ Template contents for `templates/frontend/`:
 
 ## Install
 
-> **Before running any script, it is a good idea to read through it first.**
-
-Dry-run syntax check:
+Install the required tools with your package manager first:
 
 ```bash
-bash -n install.sh
+# Arch
+sudo pacman -S neovim git make unzip curl ripgrep fd nodejs python cargo
+# Debian / Ubuntu
+sudo apt install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo
+# Fedora
+sudo dnf install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo
+# Void
+sudo xbps-install neovim git make unzip curl ripgrep fd nodejs python3 cargo
+# Nix
+nix-env -iA nixpkgs.neovim nixpkgs.git nixpkgs.make nixpkgs.unzip nixpkgs.curl nixpkgs.ripgrep nixpkgs.fd nixpkgs.nodejs nixpkgs.python3 nixpkgs.cargo
 ```
 
-Clone the repo and run it locally:
+Then clone and run the installer:
 
 ```bash
 git clone https://github.com/Ledev0/LeVIX.git
@@ -533,7 +536,7 @@ cd LeVIX
 bash install.sh
 ```
 
-One-line curl install (after review):
+One-line curl (after reviewing the script):
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/Ledev0/LeVIX/main/install.sh | bash
@@ -550,58 +553,51 @@ curl -sSL https://raw.githubusercontent.com/Ledev0/LeVIX/main/install.sh | bash
 If `~/.config/nvim/.git` exists, the script runs:
 1. `git pull origin main`
 2. `nvim --headless "+Lazy! sync" +qa`
+
 Then exits without reinstalling.
 
 ### Fresh Install Mode
 
-**Distro Detection**
+The script does **not** install packages or detect your distro. It checks dependencies, offers an optional AppImage download for Neovim, prompts for language tooling, then clones the config.
 
-| Distro | Package Manager |
-|--------|----------------|
-| Arch Linux | `sudo pacman -Sy --needed --noconfirm` |
-| Debian / Ubuntu | `sudo apt update; sudo apt install -y` |
-| Fedora | `sudo dnf install -y` |
-| Void Linux | `sudo xbps-install -S -y` |
-| Unrecognized | Falls back to AppImage |
+**Step 1 — Neovim check**
 
-**Neovim Installation**
+If `nvim` is not in PATH or is older than 0.12, you are prompted:
 
-1. Checks if `nvim` is in PATH
-2. If not found or version < 0.12.0, installs via distro package manager
-3. For Debian/Ubuntu: uses the official Neovim PPA (`ppa:neovim-ppa/stable`); if PPA build is still < 0.12, falls back to AppImage
-4. For Fedora, Arch, Void: uses distro package directly
-5. AppImage fallback: downloads from GitHub releases, installs to `/usr/local/bin/nvim`
+```
+Download Neovim AppImage instead? [y/N]
+```
 
-**Core Dependencies**
+If you answer `y`, the script downloads the latest stable AppImage from GitHub and installs it to `/usr/local/bin/nvim`. It detects `doas` or `sudo` (in that priority) to escalate privileges when needed. If neither is available, it prints instructions to move the file manually.
 
-All installed via distro package manager if missing:
+**Step 2 — Core dependency check**
 
-| Binary | Package Name |
-|--------|-------------|
-| git | git |
-| make | make |
-| unzip | unzip |
-| curl | curl |
-| rg | ripgrep |
-| fd | fd-find (Debian/Fedora/Void), fd (Arch) |
-| node | nodejs |
-| python3 | python3 (Debian/Fedora/Void), python (Arch) |
-| cargo | cargo |
+Verifies `git`, `make`, `unzip`, `curl`, `rg`, `fd`, `node`, `python3`, and `cargo` are in your PATH. If any are missing, it prints example install commands for each distro and exits:
 
-**Optional Language Tooling**
+```
+Arch:   sudo pacman -S neovim git make unzip curl ripgrep fd nodejs python cargo
+Debian: sudo apt install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo
+Fedora: sudo dnf install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo
+Void:   sudo xbps-install neovim git make unzip curl ripgrep fd nodejs python3 cargo
+Nix:    nix-env -iA nixpkgs.neovim nixpkgs.git nixpkgs.make nixpkgs.unzip nixpkgs.curl nixpkgs.ripgrep nixpkgs.fd nixpkgs.nodejs nixpkgs.python3 nixpkgs.cargo
+```
 
-The installer prompts interactively for each language:
+**Step 3 — Language tooling (optional)**
 
-| Language | Tools Installed |
-|----------|----------------|
-| Java | JDK 21 (distro-specific package), jdtls/checkstyle/google-java-format install automatically via Mason on first launch |
-| Python | ruff (via distro package manager or `pip install --user`) |
-| C/C++ | clang-tools-extra (distro-specific: clang-tidy, clang-format) |
-| Web Dev | prettier, htmlhint, stylelint, eslint_d (via `npm install -g`) |
+You are prompted to install tooling for each language interactively. Selecting a language prints install suggestions; nothing is installed automatically.
 
-**Backup**
+| Language | Tool Check | Suggested Install |
+|----------|------------|-------------------|
+| Java | `java` (JDK >= 17) | Arch: `sudo pacman -S jdk-openjdk` · Debian: `sudo apt install openjdk-21-jdk` · Fedora: `sudo dnf install java-21-openjdk java-21-openjdk-devel` · Void: `sudo xbps-install openjdk21` |
+| Python | `ruff` | `pip install --user ruff` |
+| C/C++ | `clang-tidy` | Arch: `sudo pacman -S clang` · Debian: `sudo apt install clang-tidy clang-format` · Fedora: `sudo dnf install clang-tools-extra` · Void: `sudo xbps-install clang-tools-extra` |
+| Web Dev | `prettier`, `htmlhint`, `stylelint`, `eslint_d` | `npm install -g prettier htmlhint stylelint eslint_d` |
 
-Existing `~/.config/nvim` is moved to `~/.config/nvim.bak.<timestamp>` before cloning.
+jdtls, checkstyle, google-java-format, and LSP servers (html, cssls, ts_ls) install automatically via Mason on first launch.
+
+**Step 4 — Config backup & clone**
+
+Existing `~/.config/nvim` is moved to `~/.config/nvim.bak.<timestamp>`. Then the LeVIX config is cloned from GitHub.
 
 ---
 
