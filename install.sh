@@ -43,164 +43,97 @@ echo -e "${RESET}"
 echo -e "${YELLOW}===> Welcome to the LeVIX Installer <===${RESET}\n"
 
 
-echo -e "${CYAN}[1/5] Checking Neovim installation...${RESET}"
-
-if [ -f /etc/arch-release ]; then
-    PM="$SUDO pacman -Sy --needed --ask=20"
-    PKG_FD="fd"
-    PKG_PYTHON3="python"
-elif [ -f /etc/debian_version ]; then
-    PM="$SUDO apt update; $SUDO apt install -y"
-    PKG_FD="fd-find"
-    PKG_PYTHON3="python3"
-elif [ -f /etc/fedora-release ]; then
-    PM="$SUDO dnf install -y"
-    PKG_FD="fd-find"
-    PKG_PYTHON3="python3"
-elif [ -f /etc/void-release ] || grep -q "^ID=void" /etc/os-release 2>/dev/null; then
-    PM="$SUDO xbps-install -S -y"
-    PKG_FD="fd-find"
-    PKG_PYTHON3="python3"
-else
-    PM=""
-    PKG_FD="fd-find"
-    PKG_PYTHON3="python3"
-fi
-
 download_appimage() {
-    local appimage_url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
+    local url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
 
-    echo -e "${CYAN}  Downloading Neovim AppImage (latest stable)...${RESET}"
-
-    if ! curl -Lo /tmp/nvim.appimage "$appimage_url"; then
-        echo -e "${RED}  ✗ Failed to download Neovim AppImage.${RESET}"
+    echo -e "${CYAN}  Downloading Neovim AppImage...${RESET}"
+    if curl -sSL -o /tmp/nvim.appimage "$url"; then
+        chmod u+x /tmp/nvim.appimage
+        if [ -w /usr/local/bin ]; then
+            mv /tmp/nvim.appimage /usr/local/bin/nvim
+        elif [ -n "$SUDO" ]; then
+            $SUDO mv /tmp/nvim.appimage /usr/local/bin/nvim
+        else
+            echo -e "  ${YELLOW}⚠${RESET}  Cannot write to /usr/local/bin and no privilege escalator found."
+            echo -e "  ${YELLOW}  Manually move the file:${RESET} sudo mv /tmp/nvim.appimage /usr/local/bin/nvim"
+            return 1
+        fi
+        echo -e "  ${GREEN}✓${RESET} AppImage installed to /usr/local/bin/nvim."
+        return 0
+    else
+        echo -e "  ${RED}✗${RESET} Failed to download AppImage."
         return 1
     fi
-
-    chmod u+x /tmp/nvim.appimage
-    $SUDO mv /tmp/nvim.appimage /usr/local/bin/nvim
-    return 0
 }
 
-install_or_upgrade_nvim() {
-    echo -e "${CYAN}  Installing/upgrading Neovim...${RESET}"
-    if [ -f /etc/fedora-release ]; then
-        # Fedora's repo package is kept reasonably current
-        eval "$PM neovim"
+echo -e "${CYAN}[1/6] Checking Neovim installation...${RESET}"
 
-    elif [ -f /etc/arch-release ]; then
-        # Arch repos always carry the latest stable release
-        eval "$PM neovim"
-
-    elif [ -f /etc/debian_version ]; then
-        # Debian/Ubuntu's default apt repos are usually far behind upstream.
-        # Use the official Neovim PPA for an up-to-date build.
-        if ! command -v add-apt-repository &> /dev/null; then
-            $SUDO apt update
-            $SUDO apt install -y software-properties-common
-        fi
-        $SUDO add-apt-repository -y ppa:neovim-ppa/stable
-        $SUDO apt update
-        $SUDO apt install -y neovim
-
-        # Fallback if the PPA build still doesn't meet the version requirement
-        if command -v nvim &> /dev/null; then
-            CHECK_VERSION=$(nvim --version | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-            CHECK_MINOR=$(echo "$CHECK_VERSION" | cut -d. -f2)
-            if [ "$CHECK_MINOR" -lt 12 ]; then
-                echo -e "${YELLOW}  PPA build still outdated, falling back to AppImage...${RESET}"
-                download_appimage
-            fi
-        else
-            download_appimage
-        fi
-
-    elif [ -f /etc/void-release ] || grep -q "^ID=void" /etc/os-release 2>/dev/null; then
-        # Void Linux has reasonably recent packages
-        eval "$PM neovim"
-
-    else
-        echo -e "${YELLOW}  Unrecognized distro, installing AppImage...${RESET}"
-        download_appimage
-    fi
-}
-
+NEEDS_NVIM=0
 if ! command -v nvim &> /dev/null; then
-    echo -e "${YELLOW}⚠️ Neovim not found. Installing it now...${RESET}"
-    install_or_upgrade_nvim
-fi
-
-if ! command -v nvim &> /dev/null; then
-    echo -e "${RED}❌ Failed to install Neovim automatically. Please install it manually (>= 0.12.0).${RESET}"
-    exit 1
-fi
-
-NVIM_VERSION=$(nvim --version | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-NVIM_MAJOR=$(echo "$NVIM_VERSION" | cut -d. -f1)
-NVIM_MINOR=$(echo "$NVIM_VERSION" | cut -d. -f2)
-
-if [ "$NVIM_MAJOR" -eq 0 ] && [ "$NVIM_MINOR" -lt 12 ]; then
-    echo -e "${YELLOW}⚠️ Neovim $NVIM_VERSION found, but LeVIX requires >= 0.12.0. Upgrading...${RESET}"
-    install_or_upgrade_nvim
+    echo -e "  ${RED}✗${RESET} nvim is missing."
+    NEEDS_NVIM=1
+else
     NVIM_VERSION=$(nvim --version | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
     NVIM_MAJOR=$(echo "$NVIM_VERSION" | cut -d. -f1)
     NVIM_MINOR=$(echo "$NVIM_VERSION" | cut -d. -f2)
     if [ "$NVIM_MAJOR" -eq 0 ] && [ "$NVIM_MINOR" -lt 12 ]; then
-        echo -e "${RED}❌ Could not upgrade Neovim automatically. Please upgrade manually (>= 0.12.0).${RESET}"
-        exit 1
+        echo -e "  ${RED}✗${RESET} nvim version $NVIM_VERSION (need >= 0.12)."
+        NEEDS_NVIM=1
+    else
+        echo -e "  ${GREEN}✓${RESET} nvim (version $NVIM_VERSION)."
     fi
 fi
 
-echo -e "${GREEN}✅ Neovim ready (Version: $NVIM_VERSION)${RESET}\n"
+if [ $NEEDS_NVIM -eq 1 ]; then
+    read -rp "$(echo -e "${CYAN}  Download Neovim AppImage instead? [y/N]: ${RESET}")" answer
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+        download_appimage
+        if command -v nvim &> /dev/null; then
+            NVIM_VERSION=$(nvim --version | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+            NVIM_MAJOR=$(echo "$NVIM_VERSION" | cut -d. -f1)
+            NVIM_MINOR=$(echo "$NVIM_VERSION" | cut -d. -f2)
+            if [ "$NVIM_MAJOR" -eq 0 ] && [ "$NVIM_MINOR" -lt 12 ]; then
+                echo -e "  ${YELLOW}⚠${RESET}  AppImage is still < 0.12 (version $NVIM_VERSION)."
+            else
+                NEEDS_NVIM=0
+                echo -e "  ${GREEN}✓${RESET} nvim (version $NVIM_VERSION)."
+            fi
+        fi
+    fi
+fi
 
 
-echo -e "${CYAN}[2/5] Checking core system dependencies...${RESET}"
-declare -A deps=(
-    ["git"]="git"
-    ["make"]="make"
-    ["unzip"]="unzip"
-    ["curl"]="curl"
-    ["rg"]="ripgrep"
-    ["fd"]="$PKG_FD"
-    ["node"]="nodejs"
-    ["python3"]="$PKG_PYTHON3"
-    ["cargo"]="cargo"
-)
+echo -e "${CYAN}[2/6] Checking core system dependencies...${RESET}"
 
-missing_deps=()
-
-for cmd in "${!deps[@]}"; do
-    if ! command -v "$cmd" &> /dev/null; then
-        echo -e "  ${RED}✗${RESET} $cmd is missing."
-        missing_deps+=("${deps[$cmd]}")
+MISSING=0
+for tool in git make unzip curl rg fd node python3 cargo; do
+    if ! command -v "$tool" &> /dev/null; then
+        echo -e "  ${RED}✗${RESET} $tool is missing."
+        MISSING=1
     else
-        echo -e "  ${GREEN}✓${RESET} $cmd is ready."
+        echo -e "  ${GREEN}✓${RESET} $tool is ready."
     fi
 done
 
 
-if [ ${#missing_deps[@]} -ne 0 ]; then
-    echo -e "\n${YELLOW}⚠️ Missing required packages: ${missing_deps[*]}${RESET}"
-
-    if [ -z "$PM" ]; then
-        echo -e "${YELLOW}⚠️  Unsupported package manager. Please install manually:${RESET}"
-        echo -e "  ${YELLOW}$SUDO apt install ${missing_deps[*]}${RESET}"
-        echo -e "  ${YELLOW}  (or use your distro's package manager)${RESET}"
-    else
-        echo -e "${CYAN}Installing missing dependencies...${RESET}"
-        eval "$PM ${missing_deps[*]}"
-    fi
-else
-    echo -e "${GREEN}✅ All core dependencies are perfectly satisfied!${RESET}\n"
+if [ $NEEDS_NVIM -eq 1 ] || [ $MISSING -eq 1 ]; then
+    echo -e "\n${YELLOW}Install the missing tools with your package manager. For example:${RESET}\n"
+    echo -e "  ${CYAN}Arch:${RESET}   sudo pacman -S neovim git make unzip curl ripgrep fd nodejs python cargo"
+    echo -e "  ${CYAN}Debian:${RESET} sudo apt install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo"
+    echo -e "  ${CYAN}Fedora:${RESET} sudo dnf install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo"
+    echo -e "  ${CYAN}Void:${RESET}   sudo xbps-install neovim git make unzip curl ripgrep fd nodejs python3 cargo"
+    echo -e "  ${CYAN}Nix:${RESET}    nix-env -iA nixpkgs.neovim nixpkgs.git nixpkgs.make nixpkgs.unzip nixpkgs.curl nixpkgs.ripgrep nixpkgs.fd nixpkgs.nodejs nixpkgs.python3 nixpkgs.cargo"
+    echo ""
+    exit 1
 fi
 
+echo -e "${GREEN}✅ All dependencies satisfied.${RESET}\n"
 
-echo -e "${CYAN}[3/5] Optional language tooling${RESET}"
+
+echo -e "${CYAN}[3/6] Optional language tooling${RESET}"
 echo -e "${YELLOW}LeVIX has full LSP/lint/format/debug support for:${RESET}"
 echo -e "${YELLOW}Java, Python, C/C++, HTML, CSS, JavaScript/TypeScript${RESET}"
 echo -e "${YELLOW}You can install support for only the languages you actually use.${RESET}\n"
-
-declare -a selected_langs=()
 
 ask_lang() {
     local lang_name="$1"
@@ -214,6 +147,8 @@ ask_lang() {
     fi
 }
 
+declare -a selected_langs=()
+
 ask_lang "Java (JDK, checkstyle, google-java-format via jdtls)" "java"
 ask_lang "Python (ruff)" "python"
 ask_lang "C/C++ (clang-tools-extra for clang-tidy)" "cpp"
@@ -222,66 +157,48 @@ ask_lang "Web Dev (HTML, CSS, JavaScript - prettier, ESLint, etc.)" "web"
 for lang in "${selected_langs[@]}"; do
     case "$lang" in
         java)
-            if ! command -v java &> /dev/null; then
-                echo -e "${CYAN}  Installing JDK...${RESET}"
-                if [ -n "$PM" ]; then
-                    if [ -f /etc/fedora-release ]; then
-                        eval "$PM java-21-openjdk java-21-openjdk-devel"
-                    elif [ -f /etc/debian_version ]; then
-                        eval "$PM openjdk-21-jdk"
-                    elif [ -f /etc/arch-release ]; then
-                        eval "$PM jdk-openjdk"
-                    elif [ -f /etc/void-release ] || grep -q "^ID=void" /etc/os-release 2>/dev/null; then
-                        eval "$PM openjdk21"
-                    fi
-                else
-                    echo -e "  ${RED}✗${RESET} Please install a JDK (>= 17) manually."
-                fi
+            if command -v java &> /dev/null; then
+                echo -e "  ${GREEN}✓${RESET} java is ready."
             else
-                echo -e "  ${GREEN}✓${RESET} Java already installed."
+                echo -e "  ${YELLOW}⚠${RESET}  JDK not found. Install with your package manager, for example:${RESET}"
+                echo -e "    Arch:   sudo pacman -S jdk-openjdk"
+                echo -e "    Debian: sudo apt install openjdk-21-jdk"
+                echo -e "    Fedora: sudo dnf install java-21-openjdk java-21-openjdk-devel"
+                echo -e "    Void:   sudo xbps-install openjdk21"
             fi
             echo -e "  ${YELLOW}ℹ${RESET}  jdtls, checkstyle, and google-java-format will install automatically via Mason on first launch."
             ;;
         python)
-            if ! command -v ruff &> /dev/null; then
-                echo -e "${CYAN}  Installing ruff...${RESET}"
-                if [ -n "$PM" ]; then
-                    eval "$PM ruff" || pip install --user ruff
-                else
-                    pip install --user ruff
-                fi
+            if command -v ruff &> /dev/null; then
+                echo -e "  ${GREEN}✓${RESET} ruff is ready."
             else
-                echo -e "  ${GREEN}✓${RESET} ruff already installed."
+                echo -e "  ${YELLOW}⚠${RESET}  ruff not found. Install it:${RESET}"
+                echo -e "    pip install --user ruff"
             fi
             ;;
         cpp)
-            if ! command -v clang-tidy &> /dev/null; then
-                echo -e "${CYAN}  Installing clang-tools-extra...${RESET}"
-                if [ -f /etc/fedora-release ]; then
-                    eval "$PM clang-tools-extra"
-                elif [ -f /etc/debian_version ]; then
-                    eval "$PM clang-tidy clang-format"
-                elif [ -f /etc/arch-release ]; then
-                    eval "$PM clang"
-                elif [ -f /etc/void-release ] || grep -q "^ID=void" /etc/os-release 2>/dev/null; then
-                    eval "$PM clang-tools-extra"
-                else
-                    echo -e "  ${RED}✗${RESET} Please install clang-tidy manually."
-                fi
+            if command -v clang-tidy &> /dev/null; then
+                echo -e "  ${GREEN}✓${RESET} clang-tidy is ready."
             else
-                echo -e "  ${GREEN}✓${RESET} clang-tidy already installed."
+                echo -e "  ${YELLOW}⚠${RESET}  clang-tidy not found. Install with your package manager, for example:${RESET}"
+                echo -e "    Arch:   sudo pacman -S clang"
+                echo -e "    Debian: sudo apt install clang-tidy clang-format"
+                echo -e "    Fedora: sudo dnf install clang-tools-extra"
+                echo -e "    Void:   sudo xbps-install clang-tools-extra"
             fi
             ;;
         web)
-            echo -e "${CYAN}  Installing web development tools via npm...${RESET}"
-            if command -v npm &> /dev/null; then
-                if npm install -g prettier htmlhint stylelint eslint_d; then
-                    echo -e "  ${GREEN}✓${RESET} Web dev tools installed successfully."
-                else
-                    echo -e "  ${YELLOW}⚠${RESET}  npm install failed (may need $SUDO). Try: $SUDO npm install -g prettier htmlhint stylelint eslint_d"
+            WEB_MISSING=""
+            for web_tool in prettier htmlhint stylelint eslint_d; do
+                if ! command -v "$web_tool" &> /dev/null; then
+                    WEB_MISSING="$web_tool $WEB_MISSING"
                 fi
+            done
+            if [ -n "$WEB_MISSING" ]; then
+                echo -e "  ${YELLOW}⚠${RESET}  Some web tools not found. Install them:${RESET}"
+                echo -e "    npm install -g prettier htmlhint stylelint eslint_d"
             else
-                echo -e "  ${RED}✗${RESET} npm not found. Please install Node.js/npm first."
+                echo -e "  ${GREEN}✓${RESET} Web tools are ready."
             fi
             echo -e "  ${YELLOW}ℹ${RESET}  html, cssls, and ts_ls LSP servers will install automatically via Mason on first launch."
             ;;
@@ -290,7 +207,7 @@ done
 echo ""
 
 
-echo -e "${CYAN}[4/5] Preparing configuration directory...${RESET}"
+echo -e "${CYAN}[4/6] Preparing configuration directory...${RESET}"
 if [ -d "$HOME/.config/nvim" ]; then
     BACKUP_DIR="$HOME/.config/nvim.bak.$(date +%Y%m%d-%H%M%S)"
     echo -e "${YELLOW}   Found existing Neovim config. Backing up to ${BACKUP_DIR}...${RESET}"
@@ -299,7 +216,7 @@ fi
 echo -e "${GREEN}   Directory is ready.${RESET}\n"
 
 
-echo -e "${CYAN}[4.5/5] Important Reminders${RESET}"
+echo -e "${CYAN}[5/6] Important Reminders${RESET}"
 echo -e "${YELLOW}📝 Please ensure the following BEFORE starting LeVIX:${RESET}"
 echo -e "  1. ${YELLOW}Install a Nerd Font${RESET} in your terminal (e.g., JetBrainsMono Nerd Font)"
 echo -e "     Without it, icons will appear as broken boxes."
@@ -307,7 +224,7 @@ echo -e "  2. ${YELLOW}Set your terminal font${RESET} to use the Nerd Font you i
 echo -e "  3. ${YELLOW}After installation, run:${RESET} ${CYAN}nvim +checkhealth levix${RESET}"
 echo -e "     to verify all dependencies are installed correctly.\n"
 
-echo -e "${CYAN}[5/5] Cloning LeVIX from GitHub...${RESET}"
+echo -e "${CYAN}[6/6] Cloning LeVIX from GitHub...${RESET}"
 if git clone https://github.com/Ledev0/LeVIX.git "$HOME/.config/nvim"; then
     echo -e "\n${GREEN}==================================================${RESET}"
     echo -e "${GREEN}🎉 LeVIX has been successfully installed!${RESET}"
