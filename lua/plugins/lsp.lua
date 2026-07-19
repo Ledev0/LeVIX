@@ -21,7 +21,7 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "pyright", "clangd", "ruff", "html", "cssls", "ts_ls" },
+				ensure_installed = { "pyright", "clangd", "ruff", "html", "cssls", "ts_ls", "lua_ls" },
 				automatic_installation = true,
 			})
 		end,
@@ -45,7 +45,20 @@ return {
 			vim.lsp.config("html", {})
 			vim.lsp.config("cssls", {})
 			vim.lsp.config("ts_ls", {})
-			vim.lsp.enable({ "pyright", "ruff", "clangd", "html", "cssls", "ts_ls" })
+			vim.lsp.config("lua_ls", {
+				settings = {
+					Lua = {
+						runtime = { version = "LuaJIT" },
+						diagnostics = { globals = { "vim" } },
+						workspace = {
+							checkThirdParty = false,
+							library = vim.api.nvim_get_runtime_file("", true),
+						},
+						telemetry = { enable = false },
+					},
+				},
+			})
+			vim.lsp.enable({ "pyright", "ruff", "clangd", "html", "cssls", "ts_ls", "lua_ls" })
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				callback = function(args)
