@@ -1,5 +1,8 @@
 return {
 	"vyfor/cord.nvim",
+	cond = function()
+		return vim.fn.executable("cargo") == 1
+	end,
 	build = function()
 		require("cord").update()
 	end,
