@@ -20,4 +20,9 @@ require("lazy").setup({
 	},
 	install = { colorscheme = { "gruvbox" } },
 	checker = { enabled = true },
+	defaults = {
+		build = {
+			timeout = 600000,
+		},
+	},
 })
