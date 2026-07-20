@@ -122,6 +122,7 @@ if [ $NEEDS_NVIM -eq 1 ] || [ $MISSING -eq 1 ]; then
     echo -e "  ${CYAN}Debian:${RESET} sudo apt install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo"
     echo -e "  ${CYAN}Fedora:${RESET} sudo dnf install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo"
     echo -e "  ${CYAN}Void:${RESET}   sudo xbps-install neovim git make unzip curl ripgrep fd nodejs python3 cargo"
+    echo -e "  ${CYAN}Gentoo:${RESET} sudo emerge --ask dev-vcs/git sys-devel/make app-arch/unzip net-misc/curl sys-apps/ripgrep sys-apps/fd net-libs/nodejs dev-lang/python dev-lang/rust"
     echo -e "  ${CYAN}Nix:${RESET}    nix-env -iA nixpkgs.neovim nixpkgs.git nixpkgs.make nixpkgs.unzip nixpkgs.curl nixpkgs.ripgrep nixpkgs.fd nixpkgs.nodejs nixpkgs.python3 nixpkgs.cargo"
     echo ""
     exit 1
@@ -165,6 +166,7 @@ for lang in "${selected_langs[@]}"; do
                 echo -e "    Debian: sudo apt install openjdk-21-jdk"
                 echo -e "    Fedora: sudo dnf install java-21-openjdk java-21-openjdk-devel"
                 echo -e "    Void:   sudo xbps-install openjdk21"
+                echo -e "    Gentoo: sudo emerge --ask dev-java/openjdk:17"
             fi
             echo -e "  ${YELLOW}ℹ${RESET}  jdtls, checkstyle, and google-java-format will install automatically via Mason on first launch."
             ;;
@@ -185,6 +187,7 @@ for lang in "${selected_langs[@]}"; do
                 echo -e "    Debian: sudo apt install clang-tidy clang-format"
                 echo -e "    Fedora: sudo dnf install clang-tools-extra"
                 echo -e "    Void:   sudo xbps-install clang-tools-extra"
+                echo -e "    Gentoo: sudo emerge --ask sys-devel/clang"
             fi
             ;;
         web)

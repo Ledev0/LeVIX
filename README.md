@@ -291,6 +291,10 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 **`CRAG666/code_runner.nvim`** — Compiles and runs code against `input.txt` in the current directory. Supports Java (`javac`/`java`), Python (`python3`), C (`gcc`), and C++ (`g++ -std=c++17`). `<leader>rc` to run, `<leader>rf` to run file, `<leader>ri` to open input.txt.
 
+### Live Server
+
+**`selimacerbas/live-server.nvim`** — Lightweight local development server with live-reload. Starts an HTTP server on a configurable port (default 8000), injects a live-reload script, and supports CSS injection without full page reload. `<leader>ls` to start, `<leader>lo` to open in browser, `<leader>lr` to force reload, `<leader>lt` to toggle live-reload, `<leader>li` for status, `<leader>lS`/`<leader>lA` to stop.
+
 ### Lua Development
 
 **`folke/lazydev.nvim`** — Provides Neovim Lua API type annotations and completion for `vim.*`, `require()`, etc. Filetype-restricted to Lua buffers.
@@ -528,6 +532,8 @@ sudo apt install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo
 sudo dnf install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo
 # Void
 sudo xbps-install neovim git make unzip curl ripgrep fd nodejs python3 cargo
+# Gentoo
+sudo emerge --ask dev-vcs/git sys-devel/make app-arch/unzip net-misc/curl sys-apps/ripgrep sys-apps/fd net-libs/nodejs dev-lang/python dev-lang/rust
 # Nix
 nix-env -iA nixpkgs.neovim nixpkgs.git nixpkgs.make nixpkgs.unzip nixpkgs.curl nixpkgs.ripgrep nixpkgs.fd nixpkgs.nodejs nixpkgs.python3 nixpkgs.cargo
 ```
@@ -583,6 +589,7 @@ Arch:   sudo pacman -S neovim git make unzip curl ripgrep fd nodejs python cargo
 Debian: sudo apt install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo
 Fedora: sudo dnf install neovim git make unzip curl ripgrep fd-find nodejs python3 cargo
 Void:   sudo xbps-install neovim git make unzip curl ripgrep fd nodejs python3 cargo
+Gentoo: sudo emerge --ask dev-vcs/git sys-devel/make app-arch/unzip net-misc/curl sys-apps/ripgrep sys-apps/fd net-libs/nodejs dev-lang/python dev-lang/rust
 Nix:    nix-env -iA nixpkgs.neovim nixpkgs.git nixpkgs.make nixpkgs.unzip nixpkgs.curl nixpkgs.ripgrep nixpkgs.fd nixpkgs.nodejs nixpkgs.python3 nixpkgs.cargo
 ```
 
@@ -592,9 +599,9 @@ You are prompted to install tooling for each language interactively. Selecting a
 
 | Language | Tool Check | Suggested Install |
 |----------|------------|-------------------|
-| Java | `java` (JDK >= 17) | Arch: `sudo pacman -S jdk-openjdk` · Debian: `sudo apt install openjdk-21-jdk` · Fedora: `sudo dnf install java-21-openjdk java-21-openjdk-devel` · Void: `sudo xbps-install openjdk21` |
+| Java | `java` (JDK >= 17) | Arch: `sudo pacman -S jdk-openjdk` · Debian: `sudo apt install openjdk-21-jdk` · Fedora: `sudo dnf install java-21-openjdk java-21-openjdk-devel` · Void: `sudo xbps-install openjdk21` · Gentoo: `sudo emerge --ask dev-java/openjdk:17` |
 | Python | `ruff` | `pip install --user ruff` |
-| C/C++ | `clang-tidy` | Arch: `sudo pacman -S clang` · Debian: `sudo apt install clang-tidy clang-format` · Fedora: `sudo dnf install clang-tools-extra` · Void: `sudo xbps-install clang-tools-extra` |
+| C/C++ | `clang-tidy` | Arch: `sudo pacman -S clang` · Debian: `sudo apt install clang-tidy clang-format` · Fedora: `sudo dnf install clang-tools-extra` · Void: `sudo xbps-install clang-tools-extra` · Gentoo: `sudo emerge --ask sys-devel/clang` |
 | Web Dev | `prettier`, `htmlhint`, `stylelint`, `eslint_d` | `npm install -g prettier htmlhint stylelint eslint_d` |
 
 jdtls, checkstyle, google-java-format, and LSP servers (html, cssls, ts_ls) install automatically via Mason on first launch.
@@ -614,7 +621,7 @@ Existing `~/.config/nvim` is moved to `~/.config/nvim.bak.<timestamp>`. Then the
 | Neovim >= 0.12 | Core editor |
 | git | lazy.nvim plugin manager, LeVIX updates |
 | ripgrep (rg) | Telescope live grep |
-| fd (fd-find on Debian/Fedora/Void, fd on Arch) | Telescope file finding |
+| fd (fd-find on Debian/Fedora/Void, fd on Arch/Gentoo) | Telescope file finding |
 | curl | mason.nvim downloads |
 | make | Treesitter parser compilation |
 | cargo | blink.cmp native fuzzy matcher build |
