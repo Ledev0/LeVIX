@@ -295,6 +295,9 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 **`selimacerbas/live-server.nvim`** — Lightweight local development server with live-reload. Starts an HTTP server on a configurable port (default 8000), injects a live-reload script, and supports CSS injection without full page reload. `<leader>ls` to start, `<leader>lo` to open in browser, `<leader>lr` to force reload, `<leader>lt` to toggle live-reload, `<leader>li` for status, `<leader>lS`/`<leader>lA` to stop.
 
+### Markdown Preview
+**`selimacerbas/markdown-preview.nvim`** — Lightweight local development server with live-reload. To see your editing live in your browser like 'live-server' feature and is support light and dark mode . `<leader>as` to start preview, `<leader>ap` to stop preview , `<leader>ar` to refresh preview.
+
 ### Lua Development
 
 **`folke/lazydev.nvim`** — Provides Neovim Lua API type annotations and completion for `vim.*`, `require()`, etc. Filetype-restricted to Lua buffers.
@@ -457,6 +460,26 @@ Template contents for `templates/frontend/`:
 | `<leader>rf` | Run file |
 | `<leader>ri` | Open input.txt |
 
+### Live Server
+
+| Key | Description |
+|-----|-------------|
+| `<leader>lA` | Stop all |
+| `<leader>li` | Show server status |
+| `<leader>lo` | Open existing port in browser |
+| `<leader>lr` | Fore reload (pick port) |
+| `<leader>ls` | Start (pick path & port) |
+| `<leader>lS` | Stop one (pick port) |
+| `<leader>lt` | Toggle live-reload (pick port) |
+
+### Markdown Preview
+
+| Key | Description |
+|-----|-------------|
+| `<leader>as` | Start Perview |
+| `<leader>ap` | Stop Preview |
+| `<leader>ar` | Refresh preview |
+
 ### Harpoon
 
 | Key | Description |
@@ -507,6 +530,7 @@ Template contents for `templates/frontend/`:
 
 | Prefix | Group Name |
 |--------|------------|
+| `<leader>a` | Markdown Preview |
 | `<leader>f` | Find/Search |
 | `<leader>g` | Git Engine |
 | `<leader>c` | Code/LSP |
@@ -516,6 +540,8 @@ Template contents for `templates/frontend/`:
 | `<leader>m` | Todo Tags |
 | `<leader>h` | Harpoon Jump |
 | `<leader>s` | Sessions Management |
+| `<leader>l` | LiveServer |
+
 
 ---
 
