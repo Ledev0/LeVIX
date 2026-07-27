@@ -21,7 +21,6 @@ return {
 			{ "<leader>c", group = "󰅪 Code/LSP" },
 			{ "<leader>t", group = "󰆍 Terminal Management" },
 			{ "<leader>d", group = " Debug" },
-			{ "<leader>r", group = " Run" },
 			{ "<leader>a", group = " Markdown Preview" },
 
 			{ "<leader>m", group = " Todo Tags" },
