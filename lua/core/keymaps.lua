@@ -25,6 +25,7 @@ keymap("v", "K", ":m '<-2<CR>gv=gv", opts)
 keymap("v", "p", '"_dP', opts)
 
 -- Buffers
+keymap("n", "<leader>i", ":enew<CR>", { desc = "New Buffer" })
 keymap("n", "<S-l>", ":bnext<CR>", { desc = "Next Buffer" })
 keymap("n", "<S-h>", ":bprevious<CR>", { desc = "Previous Buffer" })
 keymap("n", "<leader>x", ":bdelete<CR>", { desc = "Close current buffer" })
