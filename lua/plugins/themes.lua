@@ -8,7 +8,8 @@ return {
 	{ "rebelot/kanagawa.nvim", lazy = true },
 	{ "xero/miasma.nvim", lazy = true },
 	{ "aliqyan-21/darkvoid.nvim", lazy = true },
-    { 'dasupradyumna/midnight.nvim', lazy = false, },
+    { "dasupradyumna/midnight.nvim", lazy = false, },
+    { "tanvirtin/monokai.nvim", lazy = false },
 	{
 		"folke/which-key.nvim",
 		init = function()
