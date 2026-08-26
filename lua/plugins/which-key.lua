@@ -22,7 +22,7 @@ return {
 			{ "<leader>t", group = "󰆍 Terminal Management" },
 			{ "<leader>d", group = " Debug" },
 			{ "<leader>a", group = " Markdown Preview" },
-			{ "<leader>T", group = "󰏗 Theme Switcher" },
+			{ "<leader>T", group = "Theme Switcher" },
 
 			{ "<leader>m", group = " Todo Tags" },
 			{ "<leader>mt", "<cmd>TodoTelescope<CR>", desc = "Search Project Todos" },
@@ -32,7 +32,7 @@ return {
 			{ "<leader>ha", desc = "Add File to Harpoon" },
 			{ "<leader>hh", desc = "Show Harpoon Menu" },
 
-			{ "<leader>l", group = " LiveServer" },
+			{ "<leader>l", group = " LiveServer" },
 			{ "<leader>s", group = " Sessions Management" },
 			{ "<leader>ss", desc = "Save Current Session" },
 			{ "<leader>sr", desc = "Restore Last Session" },
