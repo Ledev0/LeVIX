@@ -52,9 +52,5 @@ return {
 				conform.format({ bufnr = args.buf, timeout_ms = 3000, lsp_fallback = true })
 			end,
 		})
-
-		vim.keymap.set("n", "<leader>cf", function()
-			conform.format({ async = true })
-		end, { desc = "Format File" })
 	end,
 }

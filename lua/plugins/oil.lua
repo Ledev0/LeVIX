@@ -1,7 +1,8 @@
-return {
+	return {
 	"stevearc/oil.nvim",
 	event = "VeryLazy",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
+	keys = { "<leader>o" },
 	config = function()
 		require("oil").setup({
 			default_file_explorer = true,
@@ -12,7 +13,5 @@ return {
 				show_hidden = true,
 			},
 		})
-
-		vim.keymap.set("n", "<leader>o", "<CMD>Oil<CR>", { desc = "Open Oil File Explorer" })
 	end,
 }

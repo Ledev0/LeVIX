@@ -1,12 +1,7 @@
 return {
 	"selimacerbas/markdown-preview.nvim",
-	dependencies = { "selimacerbas/live-server.nvim" },
 	ft = "markdown",
-	keys = {
-		{ "<leader>as", "<cmd>MarkdownPreview<CR>", desc = "Markdown Start preview" },
-		{ "<leader>ap", "<cmd>MarkdownPreviewStop<CR>", desc = "Markdown Stop preview" },
-		{ "<leader>ar", "<cmd>MarkdownPreviewRefresh<CR>", desc = "Markdown Refresh preview" },
-	},
+	cmd = { "MarkdownPreview", "MarkdownPreviewStop", "MarkdownPreviewRefresh" },
 	config = function()
 		local browser
 		if vim.fn.has("wsl") == 1 or vim.fn.has("win32") == 1 then

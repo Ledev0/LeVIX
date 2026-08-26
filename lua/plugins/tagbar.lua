@@ -1,10 +1,11 @@
-return {
+	return {
 	"stevearc/aerial.nvim",
 	dependencies = {
 		"nvim-treesitter/nvim-treesitter",
 		"nvim-tree/nvim-web-devicons",
 	},
 	event = "BufReadPost",
+	keys = { "<leader>co" },
 	config = function()
 		require("aerial").setup({
 			layout = {
@@ -13,7 +14,5 @@ return {
 			},
 			show_guides = true,
 		})
-
-		vim.keymap.set("n", "<leader>co", "<cmd>AerialToggle<CR>", { desc = "Toggle Outline" })
 	end,
 }

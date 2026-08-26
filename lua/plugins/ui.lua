@@ -36,8 +36,6 @@ return {
 					show_close_icon = false,
 				},
 			})
-			vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next Tab" })
-			vim.keymap.set("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Prev Tab" })
 		end,
 	},
 

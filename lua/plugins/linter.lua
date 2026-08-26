@@ -54,7 +54,5 @@ return {
 		vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
 			callback = try_lint_safe,
 		})
-
-		vim.keymap.set("n", "<leader>cl", try_lint_safe, { desc = "Lint File" })
 	end,
 }
