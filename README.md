@@ -41,7 +41,7 @@ Loading order:
 | File | Purpose |
 |------|---------|
 | `options.lua` | All vim.opt settings, leader key (Space), diagnostics config, translucent background, spell settings, folding disabled, theme cache restore |
-| `keymaps.lua` | Global keymaps for saving, quitting, splits, buffers, terminal, telescope, gitsigns, lazygit |
+| `keymaps.lua` | Single source of truth for all keymaps — organized by group with section headers. Covers: general, windows, buffers, find/search, git, code/LSP, harpoon, terminal, debug, file explorer, markdown preview, live server, sessions, todos, theme switcher, zen mode |
 | `commands.lua` | `:LeVIXUpdate`, `:LeVIXNewWeb`, startup update check |
 | `levix/health.lua` | `:checkhealth levix` implementation |
 | `levix/newweb.lua` | `:LeVIXNewWeb` scaffolding logic |
@@ -156,11 +156,11 @@ Java configuration lives in three files:
 
 ### Formatting
 
-**`stevearc/conform.nvim`** — Format-on-save via `BufWritePre`. Checks formatter availability before running, shows one-time warning per formatter if missing. Falls back to LSP formatting. Manual format via `<leader>cf`.
+**`stevearc/conform.nvim`** — Format-on-save via `BufWritePre`. Checks formatter availability before running, shows one-time warning per formatter if missing. Falls back to LSP formatting.
 
 ### Linting
 
-**`mfussenegger/nvim-lint`** — Lint-on-save via `BufWritePost` + `BufReadPost`. Checks executable availability before running, shows one-time warning per linter if missing. Manual lint via `<leader>cl`. Uses `executable_map` for linters whose binary name differs (clangtidy → clang-tidy).
+**`mfussenegger/nvim-lint`** — Lint-on-save via `BufWritePost` + `BufReadPost`. Checks executable availability before running, shows one-time warning per linter if missing. Uses `executable_map` for linters whose binary name differs (clangtidy → clang-tidy).
 
 ### Completion
 
@@ -190,7 +190,7 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 **`nvim-lualine/lualine.nvim`** — Statusline. Sections: mode, branch/diff/diagnostics, filename, encoding/filetype, progress, location. Auto theme. Nerd Font icons.
 
-**`akinsho/bufferline.nvim`** — Tabline. Shows LSP diagnostics. Tab/S-Tab to cycle buffers. Close icons hidden.
+**`akinsho/bufferline.nvim`** — Tabline. Shows LSP diagnostics. Close icons hidden.
 
 **`stevearc/dressing.nvim`** — Replaces `vim.ui.select` and `vim.ui.input` with prettier UI. Lazy-loaded on first use via `init` hook.
 
@@ -202,17 +202,17 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 ### Navigation & Search
 
-**`nvim-telescope/telescope.nvim`** — Fuzzy finder. Commands: find_files (hidden files shown, ignores node_modules/.git), live_grep, buffers, help_tags, oldfiles, colorscheme. FZF native extension with `make` build step.
+**`nvim-telescope/telescope.nvim`** — Fuzzy finder. Commands: find_files (hidden files shown, ignores node_modules/.git), live_grep, buffers, help_tags, oldfiles, colorscheme. FZF native extension with `make` build step. Keymaps in `core/keymaps.lua`, lazy-loaded via `keys={}` trigger.
 
-**`ThePrimeagen/harpoon`** — File bookmarks. `harpoon2` branch. Quick jump via `<C-1>` through `<C-4>`.
+**`ThePrimeagen/harpoon`** — File bookmarks. `harpoon2` branch. Quick jump via `<C-1>` through `<C-4>`. Keymaps in `core/keymaps.lua`, lazy-loaded via `keys={}` trigger.
 
 ### File Explorer
 
-**`stevearc/oil.nvim`** — Edit filesystem as a buffer. Default file explorer. Shows hidden files. Icon column. `<leader>o` to open.
+**`stevearc/oil.nvim`** — Edit filesystem as a buffer. Default file explorer. Shows hidden files. Icon column.
 
 ### Git
 
-**`lewis6991/gitsigns.nvim`** — Git signs in sign column. Custom signs: ┃ add, ┃ change, _ delete, ‾ topdelete, ~ changedelete, ┆ untracked. Current line blame (500ms delay, EOL virtual text). Keymaps: ]g/[g hunk navigation, blame, preview, reset.
+**`lewis6991/gitsigns.nvim`** — Git signs in sign column. Custom signs: ┃ add, ┃ change, _ delete, ‾ topdelete, ~ changedelete, ┆ untracked. Current line blame (500ms delay, EOL virtual text).
 
 **Lazygit** — Integrated via toggleterm as a floating terminal. `_G.LeVIX.lazygit_toggle()` function. `<leader>gg` to toggle.
 
@@ -222,11 +222,11 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 ### Sessions
 
-**`rmagatti/auto-session`** — Session management. Auto-restore disabled by default. Suppressed dirs: `~/`, `~/Downloads`, `/`. `<leader>ss` save, `<leader>sr` restore.
+**`rmagatti/auto-session`** — Session management. Auto-restore disabled by default. Suppressed dirs: `~/`, `~/Downloads`, `/`.
 
 ### Theme Management
 
-**`lua/plugins/themes.lua`** — Theme definitions and switcher. Available themes:
+**`lua/plugins/themes.lua`** — Theme plugin declarations only. Available themes:
 - catppuccin/nvim
 - tokyonight.nvim
 - gruvbox.nvim
@@ -236,11 +236,11 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 - darkvoid.nvim
 - midnight.nvim
 
-`<leader>T` opens Telescope colorscheme picker (with preview disabled) or falls back to `vim.ui.select`. Selection is saved to `.levix_theme_cache` and restored on next startup via `core/options.lua`.
+`<leader>T` opens Telescope colorscheme picker (with preview disabled) or falls back to `vim.ui.select`. Selection is saved to `.levix_theme_cache` and restored on next startup via `core/options.lua`. Theme picker logic lives in `core/keymaps.lua`.
 
 ### Which-Key
 
-**`folke/which-key.nvim`** — Keybinding popup. 500ms delay. Rounded border. Defines `<leader>` group labels: f=Find/Search, g=Git, c=Code/LSP, t=Terminal, d=Debug, r=Run, m=Todos, h=Harpoon, s=Sessions.
+**`folke/which-key.nvim`** — Keybinding popup. 500ms delay. Rounded border. Defines `<leader>` group labels: f=Find/Search, g=Git, c=Code/LSP, t=Terminal, d=Debug, T=Theme, a=Markdown, m=Todos, h=Harpoon, l=LiveServer, s=Sessions.
 
 ### Treesitter
 
@@ -248,11 +248,11 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 ### Zen Mode
 
-**`folke/zen-mode.nvim`** — Distraction-free writing. `<leader>z` toggle. Width 0.99, hides signcolumn/numbers/cursorline. Disables gitsigns. Keeps tmux status line visible. Closes file tree and tagbar on open.
+**`folke/zen-mode.nvim`** — Distraction-free writing. Width 0.99, hides signcolumn/numbers/cursorline. Disables gitsigns. Keeps tmux status line visible. Closes file tree and tagbar on open.
 
 ### Code Outline
 
-**`stevearc/aerial.nvim`** — Code outline / tagbar. Right sidebar, width 35, shows guides. `<leader>co` toggle.
+**`stevearc/aerial.nvim`** — Code outline / tagbar. Right sidebar, width 35, shows guides.
 
 ### Emmet
 
@@ -278,10 +278,10 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 ### Live Server
 
-**`selimacerbas/live-server.nvim`** — Lightweight local development server with live-reload. Starts an HTTP server on a configurable port (default 8000), injects a live-reload script, and supports CSS injection without full page reload. `<leader>ls` to start, `<leader>lo` to open in browser, `<leader>lr` to force reload, `<leader>lt` to toggle live-reload, `<leader>li` for status, `<leader>lS`/`<leader>lA` to stop.
+**`selimacerbas/live-server.nvim`** — Lightweight local development server with live-reload. Starts an HTTP server on a configurable port (default 8000), injects a live-reload script, and supports CSS injection without full page reload. Keymaps in `core/keymaps.lua`, lazy-loaded via `keys={}` trigger.
 
 ### Markdown Preview
-**`selimacerbas/markdown-preview.nvim`** — Lightweight local development server with live-reload. To see your editing live in your browser like 'live-server' feature and is support light and dark mode . `<leader>as` to start preview, `<leader>ap` to stop preview , `<leader>ar` to refresh preview.
+**`selimacerbas/markdown-preview.nvim`** — Markdown preview in browser. Supports light and dark mode. Keymaps in `core/keymaps.lua`, lazy-loaded via `ft = "markdown"` and `cmd` triggers.
 
 ### Lua Development
 
@@ -351,10 +351,14 @@ Template contents for `templates/frontend/`:
 
 ### Global Keymaps (`lua/core/keymaps.lua`)
 
+All keymaps are defined in a single file organized by group. Plugin files only handle setup and lazy-load triggers.
+
 | Key | Action | Description |
 |-----|--------|-------------|
 | `<leader>w` | `:write` | Save file |
 | `<leader>q` | `:quit` | Quit |
+| `<leader>R` | `:restart` | Restart Neovim |
+| `<leader>v` | `:enew` | New buffer |
 | `<C-h>` | `<C-w>h` | Move to left split |
 | `<C-l>` | `<C-w>l` | Move to right split |
 | `<C-j>` | `<C-w>j` | Move to bottom split |
@@ -363,14 +367,15 @@ Template contents for `templates/frontend/`:
 | `<C-Down>` | `:resize +2` | Increase window height |
 | `<C-Left>` | `:vertical resize -2` | Decrease window width |
 | `<C-Right>` | `:vertical resize +2` | Increase window width |
-| `J` (visual) | `:m '>+1<CR>gv=gv` | Move selected line down (re-selects and auto-indents) |
-| `K` (visual) | `:m '<-2<CR>gv=gv` | Move selected line up (re-selects and auto-indents) |
-| `p` (visual) | `"_dP` | Paste without yanking deleted text |
+| `J` (visual) | `:m '>+1<CR>gv=gv` | Move selected line down |
+| `K` (visual) | `:m '<-2<CR>gv=gv` | Move selected line up |
+| `p` (visual) | `"_dP` | Paste without yanking |
 | `<S-l>` | `:bnext` | Next buffer |
 | `<S-h>` | `:bprevious` | Previous buffer |
+| `<Tab>` | `BufferLineCycleNext` | Next tab |
+| `<S-Tab>` | `BufferLineCyclePrev` | Previous tab |
 | `<leader>x` | `:bdelete` | Close current buffer |
 | `<Esc>` | `:nohlsearch` | Clear search highlight (defined in `core/options.lua`) |
-| `<leader>gg` | `lua LeVIX.lazygit_toggle()` | Toggle Lazygit (floating) |
 
 ### Terminal Keymaps
 
@@ -380,6 +385,7 @@ Template contents for `templates/frontend/`:
 | `<leader>th` | Normal | Terminal horizontal |
 | `<leader>tv` | Normal | Terminal vertical (size 60) |
 | `<leader>tf` | Normal | Terminal float |
+| `<leader>gg` | Normal | Toggle Lazygit (floating) |
 | `<Esc>` | Terminal | Exit to normal mode |
 | `<C-h>` | Terminal | Move to left window |
 | `<C-j>` | Terminal | Move to bottom window |
@@ -444,7 +450,7 @@ Template contents for `templates/frontend/`:
 | `<leader>lA` | Stop all |
 | `<leader>li` | Show server status |
 | `<leader>lo` | Open existing port in browser |
-| `<leader>lr` | Fore reload (pick port) |
+| `<leader>lr` | Force reload (pick port) |
 | `<leader>ls` | Start (pick path & port) |
 | `<leader>lS` | Stop one (pick port) |
 | `<leader>lt` | Toggle live-reload (pick port) |
@@ -453,7 +459,7 @@ Template contents for `templates/frontend/`:
 
 | Key | Description |
 |-----|-------------|
-| `<leader>as` | Start Perview |
+| `<leader>as` | Start preview |
 | `<leader>ap` | Stop Preview |
 | `<leader>ar` | Refresh preview |
 
@@ -494,8 +500,6 @@ Template contents for `templates/frontend/`:
 |-----|-------------|
 | `<leader>o` | Open Oil file explorer |
 | `<leader>z` | Toggle zen mode |
-| `<Tab>` | Next buffer (bufferline) |
-| `<S-Tab>` | Previous buffer (bufferline) |
 
 ### Emmet (Insert Mode)
 
@@ -507,16 +511,17 @@ Template contents for `templates/frontend/`:
 
 | Prefix | Group Name |
 |--------|------------|
-| `<leader>a` | Markdown Preview |
 | `<leader>f` | Find/Search |
 | `<leader>g` | Git Engine |
 | `<leader>c` | Code/LSP |
 | `<leader>t` | Terminal Management |
 | `<leader>d` | Debug |
+| `<leader>T` | Theme Switcher |
+| `<leader>a` | Markdown Preview |
 | `<leader>m` | Todo Tags |
 | `<leader>h` | Harpoon Jump |
-| `<leader>s` | Sessions Management |
 | `<leader>l` | LiveServer |
+| `<leader>s` | Sessions Management |
 
 
 ---
