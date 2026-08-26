@@ -1,6 +1,14 @@
 return {
 	"nvim-telescope/telescope.nvim",
 	cmd = "Telescope",
+	keys = {
+		"<leader>ff",
+		"<leader>fs",
+		"<leader>fb",
+		"<leader>fh",
+		"<leader>fo",
+		"<leader>T",
+	},
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{
@@ -25,10 +33,5 @@ return {
 				},
 			},
 		})
-
-		vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Find Files" })
-		vim.keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<CR>", { desc = "Search Text" })
-		vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Find Buffers" })
-		vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Find Help" })
 	end,
 }
