@@ -1,6 +1,6 @@
 return {
 	"stevearc/conform.nvim",
-	event = { "BufWritePre" },
+	event = "VeryLazy",
 	config = function()
 		local conform = require("conform")
 
@@ -45,7 +45,6 @@ return {
 								{ title = "LeVIX Formatter" }
 							)
 						end
-						return
 					end
 				end
 
