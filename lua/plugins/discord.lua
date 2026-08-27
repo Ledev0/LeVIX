@@ -3,9 +3,6 @@ return {
 	cond = function()
 		return vim.fn.executable("cargo") == 1
 	end,
-	build = function()
-		require("cord").update()
-	end,
 	event = "VeryLazy",
 	opts = {
 		user_stub = false,
