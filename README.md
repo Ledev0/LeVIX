@@ -559,19 +559,71 @@ One-line curl (after reviewing the script):
 curl -sSL https://raw.githubusercontent.com/Ledev0/LeVIX/main/install.sh | bash
 ```
 
+### Windows (PowerShell)
+
+LeVIX fully supports Windows (10/11). The config lives in `%LOCALAPPDATA%\nvim`. `curl` and `unzip`/`tar` ship with Windows 10+, so no setup is needed for those.
+
+**1. Install the core dependencies** with your preferred package manager:
+
+| Tool | Purpose | Winget | Scoop | Chocolatey |
+|------|---------|--------|-------|------------|
+| Neovim >= 0.12 | Core editor | `winget install Neovim.Neovim` | `scoop install neovim` | `choco install neovim -y` |
+| git | Plugin manager, updates | `winget install Git.Git` | `scoop install git` | `choco install git -y` |
+| GNU make | Build telescope-fzf-native | `winget install GnuWin32.Make` | `scoop install make` | `choco install make -y` |
+| ripgrep (rg) | Telescope live grep | `winget install BurntSushi.ripgrep.MSVC` | `scoop install ripgrep` | `choco install ripgrep -y` |
+| fd | Telescope fd finder | `winget install sharkdp.fd` | `scoop install fd` | `choco install fd -y` |
+| Node.js | LSPs, web tooling | `winget install OpenJS.NodeJS.LTS` | `scoop install nodejs` | `choco install nodejs-lts -y` |
+| Python 3 | Debugging, tooling | `winget install Python.Python.3.12` | `scoop install python` | `choco install python -y` |
+| Rust (cargo) | Build blink.cmp | `winget install Rustlang.Rustup` | `scoop install rust` | `choco install rust -y` |
+| curl / unzip | lazy.nvim installs | Built into Windows 10+ | Built into Windows 10+ | Built into Windows 10+ |
+
+**2. Install a Nerd Font** (icons will show as broken boxes otherwise):
+
+| Winget | Scoop | Chocolatey |
+|--------|-------|------------|
+| `winget install DEVCOM.JetBrainsMonoNerdFont` | `scoop bucket add nerd-fonts; scoop install JetBrainsMono-NF` | `choco install nerd-fonts-jetbrainsmono -y` |
+
+Set the font in Windows Terminal (`Settings` → your Profile → Appearance → Font face).
+
+**3. Run the installer** (recommend Windows Terminal, PowerShell 7):
+
+```powershell
+# clone into a temp dir and run
+git clone https://github.com/Ledev0/LeVIX.git
+cd LeVIX
+powershell -ExecutionPolicy Bypass -File install.ps1
+```
+
+One-liner (after reviewing the script):
+
+```powershell
+powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/Ledev0/LeVIX/main/install.ps1 | iex"
+```
+
+Reopen your terminal so PATH changes take effect, then run `nvim +checkhealth levix`.
+
+**Optional language tooling (Windows):**
+
+| Language | Suggested Install |
+|----------|-------------------|
+| Java | `winget install Microsoft.OpenJDK.21` · `scoop install openjdk` · `choco install microsoft-openjdk21 -y` |
+| Python (ruff) | `pip install ruff` |
+| C/C++ (clang-tidy) | `winget install LLVM.LLVM` · `scoop install llvm` · `choco install llvm -y` |
+| Web Dev | `npm install -g prettier htmlhint stylelint eslint_d` |
+
 ---
 
 ## Installer
 
-`install.sh` is a standalone shell script that handles fresh installation and upgrades.
+`install.sh` (Linux/macOS) and `install.ps1` (Windows) are standalone installers that handle fresh installation and upgrades.
 
-### Upgrade Mode
-
-If `~/.config/nvim/.git` exists, the script runs:
+If the distro is already installed (`~/.config/nvim/.git` on Linux/macOS, `%LOCALAPPDATA%\nvim\.git` on Windows), the script runs:
 1. `git pull origin main`
 2. `nvim --headless "+Lazy! sync" +qa`
 
-Then exits without reinstalling.
+Then exits without reinstalling — upgrade mode.
+
+### Linux / macOS (`install.sh`)
 
 ### Fresh Install Mode
 
@@ -616,6 +668,18 @@ jdtls, checkstyle, google-java-format, and LSP servers (html, cssls, ts_ls) inst
 **Step 4 — Config backup & clone**
 
 Existing `~/.config/nvim` is moved to `~/.config/nvim.bak.<timestamp>`. Then the LeVIX config is cloned from GitHub.
+
+### Windows (`install.ps1`)
+
+`install.ps1` is the PowerShell counterpart of `install.sh`. Recent PowerShell 5.1+ or PowerShell 7 required.
+
+**Upgrade mode** — if `%LOCALAPPDATA%\nvim\.git` exists, it runs `git pull origin main` + `nvim --headless "+Lazy! sync" +qa`, then exits.
+
+**Fresh install mode:**
+1. **Neovim check** — exits if `nvim` is missing or < 0.12 and prints winget/scoop/choco install lines.
+2. **Core dependency check** — verifies `git`, `make`, `rg`, `fd`, `node`, `python`, `cargo`; prints install lines per package manager if any are missing.
+3. **Language tooling (optional)** — interactive prompts for Java / Python / C/C++ / Web Dev with install suggestions (Mason handles jdtls, LSP servers, etc. on first launch). Nothing installed automatically.
+4. **Backup & clone** — moves an existing `%LOCALAPPDATA%\nvim` to `nvim.bak.<timestamp>` and clones the repo.
 
 ---
 
