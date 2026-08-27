@@ -1,7 +1,14 @@
 return {
 	{
 		"mfussenegger/nvim-dap",
-		keys = { "<F5>", "<F10>", "<F11>", "<F12>", "<leader>db", "<leader>du" },
+		keys = {
+			{ "<F5>", function() require("dap").continue() end, desc = "Debug: Continue" },
+			{ "<F10>", function() require("dap").step_over() end, desc = "Debug: Step Over" },
+			{ "<F11>", function() require("dap").step_into() end, desc = "Debug: Step Into" },
+			{ "<F12>", function() require("dap").step_out() end, desc = "Debug: Step Out" },
+			{ "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+			{ "<leader>du", function() require("dapui").toggle() end, desc = "Toggle Debug UI" },
+		},
 		dependencies = {
 			"rcarriga/nvim-dap-ui",
 			"nvim-neotest/nvim-nio",

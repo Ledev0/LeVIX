@@ -1,14 +1,6 @@
 return {
 	"nvim-telescope/telescope.nvim",
 	cmd = "Telescope",
-	keys = {
-		"<leader>ff",
-		"<leader>fs",
-		"<leader>fb",
-		"<leader>fh",
-		"<leader>fo",
-		"<leader>T",
-	},
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{

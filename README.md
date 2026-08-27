@@ -41,7 +41,7 @@ Loading order:
 | File | Purpose |
 |------|---------|
 | `options.lua` | All vim.opt settings, leader key (Space), diagnostics config, translucent background, spell settings, folding disabled, theme cache restore |
-| `keymaps.lua` | Single source of truth for all keymaps — organized by group with section headers. Covers: general, windows, buffers, find/search, git, code/LSP, harpoon, terminal, debug, file explorer, markdown preview, live server, sessions, todos, theme switcher, zen mode |
+| `keymaps.lua` | Single source of truth for all keymaps — organized by group with section headers. Covers: general, windows, buffers, find/search, git, code/LSP, terminal, file explorer, markdown preview, sessions, todos, theme switcher, zen mode. Keymaps that lazy-load a plugin with no other trigger (harpoon, debugger, live-server) live in the plugin's `keys` table with a real `rhs` — the lazy.nvim-canonical pattern |
 | `commands.lua` | `:LeVIXUpdate`, `:LeVIXNewWeb`, startup update check |
 | `levix/health.lua` | `:checkhealth levix` implementation |
 | `levix/newweb.lua` | `:LeVIXNewWeb` scaffolding logic |
@@ -202,9 +202,9 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 ### Navigation & Search
 
-**`nvim-telescope/telescope.nvim`** — Fuzzy finder. Commands: find_files (hidden files shown, ignores node_modules/.git), live_grep, buffers, help_tags, oldfiles, colorscheme. FZF native extension with `make` build step. Keymaps in `core/keymaps.lua`, lazy-loaded via `keys={}` trigger.
+**`nvim-telescope/telescope.nvim`** — Fuzzy finder. Commands: find_files (hidden files shown, ignores node_modules/.git), live_grep, buffers, help_tags, oldfiles, colorscheme. FZF native extension with `make` build step. Keymaps in `core/keymaps.lua`, lazy-loaded via `cmd = "Telescope"`.
 
-**`ThePrimeagen/harpoon`** — File bookmarks. `harpoon2` branch. Quick jump via `<C-1>` through `<C-4>`. Keymaps in `core/keymaps.lua`, lazy-loaded via `keys={}` trigger.
+**`ThePrimeagen/harpoon`** — File bookmarks. `harpoon2` branch. Quick jump via `<C-1>` through `<C-4>`. Keymaps defined in the plugin spec's `keys` table (with real `rhs`) — used as lazy-load trigger since the plugin has no other one.
 
 ### File Explorer
 
@@ -278,7 +278,7 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 ### Live Server
 
-**`selimacerbas/live-server.nvim`** — Lightweight local development server with live-reload. Starts an HTTP server on a configurable port (default 8000), injects a live-reload script, and supports CSS injection without full page reload. Keymaps in `core/keymaps.lua`, lazy-loaded via `keys={}` trigger.
+**`selimacerbas/live-server.nvim`** — Lightweight local development server with live-reload. Starts an HTTP server on a configurable port (default 8000), injects a live-reload script, and supports CSS injection without full page reload. Keymaps defined in the plugin spec's `keys` table (with real `rhs`) — used as lazy-load trigger since the plugin has no other one.
 
 ### Markdown Preview
 **`selimacerbas/markdown-preview.nvim`** — Markdown preview in browser. Supports light and dark mode. Keymaps in `core/keymaps.lua`, lazy-loaded via `ft = "markdown"` and `cmd` triggers.
@@ -432,7 +432,7 @@ All keymaps are defined in a single file organized by group. Plugin files only h
 | `<leader>cl` | Lint file (nvim-lint) |
 | `<leader>co` | Toggle code outline (aerial.nvim) |
 
-### Debug
+### Debug (defined in `lua/plugins/debugger.lua`)
 
 | Key | Description |
 |-----|-------------|
@@ -443,7 +443,7 @@ All keymaps are defined in a single file organized by group. Plugin files only h
 | `<leader>db` | Toggle breakpoint |
 | `<leader>du` | Toggle debug UI |
 
-### Live Server
+### Live Server (defined in `lua/plugins/live-server.lua`)
 
 | Key | Description |
 |-----|-------------|
@@ -463,7 +463,7 @@ All keymaps are defined in a single file organized by group. Plugin files only h
 | `<leader>ap` | Stop Preview |
 | `<leader>ar` | Refresh preview |
 
-### Harpoon
+### Harpoon (defined in `lua/plugins/harpoon.lua`)
 
 | Key | Description |
 |-----|-------------|

@@ -5,7 +5,6 @@ return {
 		"nvim-tree/nvim-web-devicons",
 	},
 	event = "BufReadPost",
-	keys = { "<leader>co" },
 	config = function()
 		require("aerial").setup({
 			layout = {
