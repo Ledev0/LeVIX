@@ -17,12 +17,10 @@ return {
 				tmux = { enabled = true },
 			},
 			on_open = function(win)
-				if vim.fn.exists(":NvimTreeClose") == 1 then
-					pcall(vim.cmd, "NvimTreeClose")
-				elseif vim.fn.exists(":NeoTreeClose") == 1 then
-					pcall(vim.cmd, "NeoTreeClose")
-				end
-				pcall(vim.cmd, "TagbarClose")
+				pcall(function()
+					require("oil").close()
+				end)
+				pcall(vim.cmd, "AerialClose")
 			end,
 			on_close = function() end,
 		},
