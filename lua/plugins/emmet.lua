@@ -10,12 +10,26 @@ return {
 				},
 			}
 			vim.g.user_emmet_install_global = 0
+
+			local emmet_filetypes = {
+				"html",
+				"css",
+				"javascript",
+				"javascriptreact",
+				"typescript",
+				"typescriptreact",
+			}
+
 			vim.api.nvim_create_autocmd("FileType", {
-				pattern = { "html", "css", "javascript", "javascriptreact", "typescript", "typescriptreact" },
+				pattern = emmet_filetypes,
 				callback = function()
-					vim.keymap.set("i", "<buffer>", "<plug>(emmet-expand-abbr)", { remap = true })
+					pcall(vim.cmd, "EmmetInstall")
 				end,
 			})
+
+			if vim.tbl_contains(emmet_filetypes, vim.bo.filetype) then
+				pcall(vim.cmd, "EmmetInstall")
+			end
 		end,
 	},
 }
