@@ -224,7 +224,7 @@ echo -e "${YELLOW}📝 Please ensure the following BEFORE starting LeVIX:${RESET
 echo -e "  1. ${YELLOW}Install a Nerd Font${RESET} in your terminal (e.g., JetBrainsMono Nerd Font)"
 echo -e "     Without it, icons will appear as broken boxes."
 echo -e "  2. ${YELLOW}Set your terminal font${RESET} to use the Nerd Font you installed."
-echo -e "  3. ${YELLOW}After installation, run:${RESET} ${CYAN}nvim +checkhealth levix${RESET}"
+echo -e "  3. ${YELLOW}After installation, run:${RESET} ${CYAN}nvim +checkhealth core.levix${RESET}"
 echo -e "     to verify all dependencies are installed correctly.\n"
 
 echo -e "${CYAN}[6/6] Cloning LeVIX from GitHub...${RESET}"
