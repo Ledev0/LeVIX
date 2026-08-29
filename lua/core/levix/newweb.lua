@@ -35,8 +35,11 @@ local function check_npm_dependency(package_name, install_hint)
 	end
 
 	local handle = io.popen("npm list -g " .. package_name .. " 2>/dev/null | grep -q " .. package_name)
-	local success = handle:close()
-	return success == 0, install_hint
+	if not handle then
+		return false, install_hint
+	end
+	local ok, _, code = handle:close()
+	return code == 0, install_hint
 end
 
 -- Copy a template file from template_dir to the project directory
