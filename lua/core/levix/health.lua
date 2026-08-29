@@ -14,6 +14,7 @@ function M.check()
 	check_executable("rg", "Install ripgrep for Telescope search")
 	check_executable("fd", "Install fd-find for Telescope file finding")
 	check_executable("curl", "Required by mason.nvim")
+	check_executable("unzip", "Required by mason.nvim downloads")
 
 	vim.health.start("LeVIX — Language Tooling")
 	check_executable("java", "Install a JDK >= 17")
