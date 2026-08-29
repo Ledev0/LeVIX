@@ -43,7 +43,7 @@ Loading order:
 | `options.lua` | All vim.opt settings, leader key (Space), diagnostics config, translucent background, spell settings, folding disabled, theme cache restore |
 | `keymaps.lua` | Single source of truth for all keymaps — organized by group with section headers. Covers: general, windows, buffers, find/search, git, code/LSP, terminal, file explorer, markdown preview, sessions, todos, theme switcher, zen mode. Keymaps that lazy-load a plugin with no other trigger (harpoon, debugger, live-server) live in the plugin's `keys` table with a real `rhs` — the lazy.nvim-canonical pattern |
 | `commands.lua` | `:LeVIXUpdate`, `:LeVIXNewWeb`, startup update check |
-| `levix/health.lua` | `:checkhealth levix` implementation |
+| `levix/health.lua` | `:checkhealth core.levix` implementation |
 | `levix/newweb.lua` | `:LeVIXNewWeb` scaffolding logic |
 
 ### Settings (`core/options.lua`)
@@ -86,11 +86,10 @@ Loading order:
 | Formatter | google-java-format (via `conform.nvim`) |
 | Linter | checkstyle (via `nvim-lint`) |
 | Debugger | jdtls DAP (via `nvim-jdtls`) |
-| Mason packages | `jdtls`, `java-debug-adapter` (via `java-tools.lua`) |
+| Mason packages | `jdtls`, `java-debug-adapter`, `google-java-format`, `stylua` (via `lsp.lua`) |
 
-Java configuration lives in three files:
-- `lua/plugins/lsp.lua` — standard LSP servers (does NOT include jdtls)
-- `lua/plugins/java-tools.lua` — ensures jdtls and java-debug-adapter are installed via Mason
+Java configuration lives in two files:
+- `lua/plugins/lsp.lua` — standard LSP servers (does NOT include jdtls); also ensures `jdtls`, `java-debug-adapter`, `google-java-format`, `stylua` via Mason
 - `lua/plugins/java-dap.lua` — configures nvim-jdtls: launches jdtls with project-specific workspace directory, attaches blink.cmp capabilities, sets up DAP with hot code replace
 
 ### Python
@@ -235,6 +234,7 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 - miasma.nvim
 - darkvoid.nvim
 - midnight.nvim
+- monokai.nvim
 
 `<leader>T` opens Telescope colorscheme picker (with preview disabled) or falls back to `vim.ui.select`. Selection is saved to `.levix_theme_cache` and restored on next startup via `core/options.lua`. Theme picker logic lives in `core/keymaps.lua`.
 
@@ -271,10 +271,6 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 **`folke/noice.nvim`** — Replaces Neovim UI messages with a modern command-line interface. Uses `nvim-notify` for notifications. Bottom search, command palette, long messages to split.
 
 **`rcarriga/nvim-notify`** — Notification backend for noice.nvim. 3s timeout, compact render, deduplicates.
-
-### Discord Rich Presence
-
-**`vyfor/cord.nvim`** — Shows current editing activity on Discord profile. Minecraft theme, dark flavor, shows time, full view. Button links to LeVIX repository.
 
 ### Live Server
 
@@ -343,7 +339,7 @@ Template contents for `templates/frontend/`:
 
 ### Startup Update Check
 
-2 seconds after startup, LeVIX runs `git fetch origin main` in the config directory. If the local branch is behind, a notification is shown: `"✨ New updates available for LeVIX! Run :LeVIXUpdate to pull changes."`
+2 seconds after startup, LeVIX runs `git fetch origin main` in the config directory. If the local branch is behind, a notification is shown: `"✨ New updates available for LeVIX! Run :LeVIXUpdate to pull changes."` Disable with `vim.g.levix_check_updates = false`.
 
 ---
 
@@ -559,65 +555,15 @@ One-line curl (after reviewing the script):
 curl -sSL https://raw.githubusercontent.com/Ledev0/LeVIX/main/install.sh | bash
 ```
 
-### Windows (PowerShell)
-
-LeVIX fully supports Windows (10/11). The config lives in `%LOCALAPPDATA%\nvim`. `curl` and `unzip`/`tar` ship with Windows 10+, so no setup is needed for those.
-
-**1. Install the core dependencies** with your preferred package manager:
-
-| Tool | Purpose | Winget | Scoop | Chocolatey |
-|------|---------|--------|-------|------------|
-| Neovim >= 0.12 | Core editor | `winget install Neovim.Neovim` | `scoop install neovim` | `choco install neovim -y` |
-| git | Plugin manager, updates | `winget install Git.Git` | `scoop install git` | `choco install git -y` |
-| GNU make | Build telescope-fzf-native | `winget install GnuWin32.Make` | `scoop install make` | `choco install make -y` |
-| ripgrep (rg) | Telescope live grep | `winget install BurntSushi.ripgrep.MSVC` | `scoop install ripgrep` | `choco install ripgrep -y` |
-| fd | Telescope fd finder | `winget install sharkdp.fd` | `scoop install fd` | `choco install fd -y` |
-| Node.js | LSPs, web tooling | `winget install OpenJS.NodeJS.LTS` | `scoop install nodejs` | `choco install nodejs-lts -y` |
-| Python 3 | Debugging, tooling | `winget install Python.Python.3.12` | `scoop install python` | `choco install python -y` |
-| Rust (cargo) | Build blink.cmp | `winget install Rustlang.Rustup` | `scoop install rust` | `choco install rust -y` |
-| curl / unzip | lazy.nvim installs | Built into Windows 10+ | Built into Windows 10+ | Built into Windows 10+ |
-
-**2. Install a Nerd Font** (icons will show as broken boxes otherwise):
-
-| Winget | Scoop | Chocolatey |
-|--------|-------|------------|
-| `winget install DEVCOM.JetBrainsMonoNerdFont` | `scoop bucket add nerd-fonts; scoop install JetBrainsMono-NF` | `choco install nerd-fonts-jetbrainsmono -y` |
-
-Set the font in Windows Terminal (`Settings` → your Profile → Appearance → Font face).
-
-**3. Run the installer** (recommend Windows Terminal, PowerShell 7):
-
-```powershell
-# clone into a temp dir and run
-git clone https://github.com/Ledev0/LeVIX.git
-cd LeVIX
-powershell -ExecutionPolicy Bypass -File install.ps1
-```
-
-One-liner (after reviewing the script):
-
-```powershell
-powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/Ledev0/LeVIX/main/install.ps1 | iex"
-```
-
-Reopen your terminal so PATH changes take effect, then run `nvim +checkhealth levix`.
-
-**Optional language tooling (Windows):**
-
-| Language | Suggested Install |
-|----------|-------------------|
-| Java | `winget install Microsoft.OpenJDK.21` · `scoop install openjdk` · `choco install microsoft-openjdk21 -y` |
-| Python (ruff) | `pip install ruff` |
-| C/C++ (clang-tidy) | `winget install LLVM.LLVM` · `scoop install llvm` · `choco install llvm -y` |
-| Web Dev | `npm install -g prettier htmlhint stylelint eslint_d` |
+Reopen your terminal so PATH changes take effect, then run `nvim +checkhealth core.levix`.
 
 ---
 
 ## Installer
 
-`install.sh` (Linux/macOS) and `install.ps1` (Windows) are standalone installers that handle fresh installation and upgrades.
+`install.sh` (Linux/macOS) is the standalone installer that handles fresh installation and upgrades.
 
-If the distro is already installed (`~/.config/nvim/.git` on Linux/macOS, `%LOCALAPPDATA%\nvim\.git` on Windows), the script runs:
+If the distro is already installed (`~/.config/nvim/.git`), the script runs:
 1. `git pull origin main`
 2. `nvim --headless "+Lazy! sync" +qa`
 
@@ -668,18 +614,6 @@ jdtls, checkstyle, google-java-format, and LSP servers (html, cssls, ts_ls) inst
 **Step 4 — Config backup & clone**
 
 Existing `~/.config/nvim` is moved to `~/.config/nvim.bak.<timestamp>`. Then the LeVIX config is cloned from GitHub.
-
-### Windows (`install.ps1`)
-
-`install.ps1` is the PowerShell counterpart of `install.sh`. Recent PowerShell 5.1+ or PowerShell 7 required.
-
-**Upgrade mode** — if `%LOCALAPPDATA%\nvim\.git` exists, it runs `git pull origin main` + `nvim --headless "+Lazy! sync" +qa`, then exits.
-
-**Fresh install mode:**
-1. **Neovim check** — exits if `nvim` is missing or < 0.12 and prints winget/scoop/choco install lines.
-2. **Core dependency check** — verifies `git`, `make`, `rg`, `fd`, `node`, `python`, `cargo`; prints install lines per package manager if any are missing.
-3. **Language tooling (optional)** — interactive prompts for Java / Python / C/C++ / Web Dev with install suggestions (Mason handles jdtls, LSP servers, etc. on first launch). Nothing installed automatically.
-4. **Backup & clone** — moves an existing `%LOCALAPPDATA%\nvim` to `nvim.bak.<timestamp>` and clones the repo.
 
 ---
 
