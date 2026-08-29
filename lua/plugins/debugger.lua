@@ -26,18 +26,27 @@ return {
 			})
 
 			local mason_registry = require("mason-registry")
-			local codelldb_path = mason_registry.get_package("codelldb"):get_install_path()
-			local extension_path = codelldb_path .. "/extension/"
-			local codelldb_bin = extension_path .. "adapter/codelldb"
+			local ok_pkg, pkg = pcall(mason_registry.get_package, "codelldb")
+			if ok_pkg and pkg:is_installed() then
+				local codelldb_path = pkg:get_install_path()
+				local extension_path = codelldb_path .. "/extension/"
+				local codelldb_bin = extension_path .. "adapter/codelldb"
 
-			dap.adapters.codelldb = {
-				type = "server",
-				port = "${port}",
-				executable = {
-					command = codelldb_bin,
-					args = { "--port", "${port}" },
-				},
-			}
+				dap.adapters.codelldb = {
+					type = "server",
+					port = "${port}",
+					executable = {
+						command = codelldb_bin,
+						args = { "--port", "${port}" },
+					},
+				}
+			else
+				vim.notify(
+					"LeVIX: codelldb not installed yet. Run :Mason to install it.",
+					vim.log.levels.WARN,
+					{ title = "LeVIX Debugger" }
+				)
+			end
 
 			dap.configurations.cpp = {
 				{
