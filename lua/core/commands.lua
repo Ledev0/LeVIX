@@ -60,6 +60,8 @@ local function check_for_updates()
 	})
 end
 
-vim.defer_fn(function()
-	check_for_updates()
-end, 2000)
+if vim.g.levix_check_updates ~= false then
+	vim.defer_fn(function()
+		check_for_updates()
+	end, 2000)
+end
