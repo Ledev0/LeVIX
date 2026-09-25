@@ -29,6 +29,10 @@ return {
 		},
 		config = function()
 			require("notify").setup({
+				-- Reference color for 100% transparency blending.
+				-- Normal bg is NONE (transparent terminal), so notify cannot
+				-- derive one itself; black matches dark transparent themes.
+				background_colour = "#000000",
 				timeout = 3000,
 				fps = 60,
 				render = "compact",

@@ -34,6 +34,24 @@ vim.api.nvim_create_user_command("LeVIXNewWeb", function(opts)
 	newweb.new_web_project(project_name)
 end, { nargs = 1, desc = "Scaffold a new frontend project with HTML, CSS, and JavaScript" })
 
+-- LeVIXTransparency: Toggle transparent background (match host terminal)
+vim.api.nvim_create_user_command("LeVIXTransparency", function(opts)
+	local transparency = require("core.levix.transparency")
+	if opts.args == "on" then
+		transparency.enable()
+	elseif opts.args == "off" then
+		transparency.disable()
+	else
+		transparency.toggle()
+	end
+end, {
+	nargs = "?",
+	complete = function()
+		return { "on", "off" }
+	end,
+	desc = "Toggle transparent background (on/off or bare to toggle)",
+})
+
 -- Check for LeVIX updates on startup
 local function check_for_updates()
 	local config_path = vim.fn.stdpath("config")

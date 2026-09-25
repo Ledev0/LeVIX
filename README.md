@@ -40,11 +40,12 @@ Loading order:
 
 | File | Purpose |
 |------|---------|
-| `options.lua` | All vim.opt settings, leader key (Space), diagnostics config, translucent background, spell settings, folding disabled, theme cache restore |
+| `options.lua` | All vim.opt settings, leader key (Space), diagnostics config, transparent background, spell settings, folding disabled, theme cache restore |
 | `keymaps.lua` | Single source of truth for all keymaps — organized by group with section headers. Covers: general, windows, buffers, find/search, git, code/LSP, terminal, file explorer, markdown preview, sessions, todos, theme switcher, zen mode. Keymaps that lazy-load a plugin with no other trigger (harpoon, debugger, live-server) live in the plugin's `keys` table with a real `rhs` — the lazy.nvim-canonical pattern |
-| `commands.lua` | `:LeVIXUpdate`, `:LeVIXNewWeb`, startup update check |
+| `commands.lua` | `:LeVIXUpdate`, `:LeVIXNewWeb`, `:LeVIXTransparency`, startup update check |
 | `levix/health.lua` | `:checkhealth core.levix` implementation |
 | `levix/newweb.lua` | `:LeVIXNewWeb` scaffolding logic |
+| `levix/transparency.lua` | Background transparency — clears hl-group backgrounds (Normal, floats, chrome) so the host terminal (e.g. foot) shows through; re-applies on `ColorScheme`/`UIEnter` |
 
 ### Settings (`core/options.lua`)
 
@@ -61,7 +62,7 @@ Loading order:
 - timeoutlen: 300ms
 - Scrolloff: 8
 - Folding: disabled (`foldenable = false`)
-- Background: translucent (`highlight Normal guibg=none`)
+- Background: transparent — `lua/core/levix/transparency.lua` clears hl-group backgrounds (Normal, NormalFloat, NormalNC, SignColumn, LineNr, StatusLine, TabLine, FloatBorder, etc.) so the host terminal's transparency shows through (e.g. foot). Re-applied on `ColorScheme`/`UIEnter`. Toggle with `:LeVIXTransparency`. Pmenu/PmenuSel stay opaque for readability.
 - Spell checking: enabled for markdown, text, and gitcommit (`lang: en_us`)
 - Diagnostics: virtual text, signs, underline; severity-sorted; rounded float border with source
 - Diagnostic signs: Nerd Font icons ( Error,  Warn,  Info,  Hint)
@@ -270,7 +271,7 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 **`folke/noice.nvim`** — Replaces Neovim UI messages with a modern command-line interface. Uses `nvim-notify` for notifications. Bottom search, command palette, long messages to split.
 
-**`rcarriga/nvim-notify`** — Notification backend for noice.nvim. 3s timeout, compact render, deduplicates.
+**`rcarriga/nvim-notify`** — Notification backend for noice.nvim. 3s timeout, compact render, deduplicates. Sets `background_colour = "#000000"` — nvim-notify's 100%-transparency reference — required because `Normal` has no background highlight when transparency is enabled (avoids the "NotifyBackground has no background" warning, default would be the same color).
 
 ### Live Server
 
@@ -336,6 +337,16 @@ Template contents for `templates/frontend/`:
 **`.stylelintrc.json`** — extends stylelint-config-standard.
 
 **`.gitignore`** — node_modules/, .DS_Store, dist/, build/, *.log, .env, .env.local, .vscode/, .idea/.
+
+### `:LeVIXTransparency`
+
+Toggles the transparent background (implemented in `lua/core/levix/transparency.lua`).
+
+- Bare `:LeVIXTransparency` toggles; `:LeVIXTransparency on|off` forces a state.
+- Clears backgrounds on ~18 highlight groups (`Normal`, `NormalFloat`, `NormalNC`, `NonText`, `SignColumn`, `LineNr`, `CursorLineNr`, `StatusLine`, `WinBar`, `TabLine`, `FloatBorder`, ...). Pmenu/PmenuSel stay opaque for readability.
+- Re-applied automatically on `ColorScheme` (theme switches) and `UIEnter` — themes reset highlight groups on load, so a one-time `highlight Normal guibg=none` gets wiped the moment you switch themes.
+- Disable permanently with `vim.g.levix_transparency = false`.
+- Pairs with a transparent terminal: foot (`[colors] alpha`), or OpenCode's `matrix-transparent` custom theme, for a fully see-through setup.
 
 ### Startup Update Check
 

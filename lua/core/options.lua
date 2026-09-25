@@ -78,9 +78,9 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.spell = true
 	end,
 })
--- background Themes
-vim.cmd([[highlight Normal guibg=none ctermbg=none]])
-vim.cmd([[highlight NonText guibg=none ctermbg=none]])
+-- Background Transparency (match host terminal, e.g. foot)
+-- Re-applied automatically on colorscheme changes.
+require("core.levix.transparency").setup()
 
 -- Theme Cache
 local theme_cache = vim.fn.stdpath("config") .. "/.levix_theme_cache"
