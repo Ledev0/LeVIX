@@ -16,15 +16,11 @@ return {
 		})
 
 		require("which-key").add({
-			{ "<F5>", icon = "󰃬", desc = "Run File (toggleterm)" },
-			{ "<F6>", icon = "󰃤", desc = "Debug: Continue (DAP)" },
 			{ "<leader>f", group = "󰍉 Find/Search" },
 			{ "<leader>g", group = "󰊢 Git Engine" },
 			{ "<leader>c", group = "󰅪 Code/LSP" },
 			{ "<leader>t", group = "󰆍 Terminal Management" },
 			{ "<leader>d", group = " Debug" },
-			{ "<leader>dr", icon = "󰃬", desc = "Run File (same as F5)" },
-			{ "<leader>dc", icon = "󰃤", desc = "Debug: Continue (same as F6)" },
 			{ "<leader>a", group = " Markdown Preview" },
 			{ "<leader>T", group = "Theme Switcher" },
 
@@ -40,6 +36,8 @@ return {
 			{ "<leader>s", group = " Sessions Management" },
 			{ "<leader>ss", desc = "Save Current Session" },
 			{ "<leader>sr", desc = "Restore Last Session" },
+			{ "<F5>", icon = "󰃬", desc = "Run File (toggleterm)" },
+			{ "<F6>", icon = "󰃤", desc = "Debug: Continue (DAP)" },
 		})
 	end,
 }

@@ -443,8 +443,8 @@ All keymaps are defined in a single file organized by group. Plugin files only h
 
 | Key | Description |
 |-----|-------------|
-| `<F5>` / `<leader>dr` | Run file (python, bash, java single-file, c/cpp compile+run via `core/levix/runner.lua`, output in floating toggleterm) |
-| `<F6>` / `<leader>dc` | Continue debugger |
+| `<F5>` / `<leader>dr` | Run file (`core/levix/runner.lua`): runs python and bash, runs java single-file, compiles + runs c/cpp. Output opens in a floating terminal; when the program exits it shows "Press ENTER to close" — Enter closes the float |
+| `<F6>` / `<leader>dc` | Run with debug (DAP continue — pick adapter, hit breakpoints, step with F10/F11/F12) |
 | `<F10>` | Step over |
 | `<F11>` | Step into |
 | `<F12>` | Step out |

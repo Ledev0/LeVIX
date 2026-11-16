@@ -1,5 +1,6 @@
--- LeVIX Code Runner (F5)
--- Runs the current file in a dedicated toggleterm terminal (count 9, reused).
+-- LeVIX Code Runner (F5 / <leader>dr)
+-- Runs the current file in a dedicated floating toggleterm (count 9, reused).
+-- When the program exits it shows "Press ENTER to close" and closes on Enter.
 -- Supports: java (single-file launcher, JDK 11+), c, cpp, python, bash.
 
 local M = {}
@@ -9,10 +10,18 @@ local interpreters = {
 	bash = "bash",
 }
 
+local run_term
+
 -- One-shot compile + run for C/C++; binary goes to a temp path, cached by the OS.
 local function compiled_cmd(compiler, file)
 	local bin = vim.fn.tempname()
 	return string.format("%s -Wall %s -o %s && %s", compiler, file, vim.fn.shellescape(bin), vim.fn.shellescape(bin))
+end
+
+-- After the program exits: wait for ENTER, then the shell exits and
+-- close_on_exit shuts the float.
+local function with_enter_prompt(cmd)
+	return string.format('%s; printf "\\n[LeVIX] Press ENTER to close... "; read _', cmd)
 end
 
 function M.run()
@@ -44,11 +53,32 @@ function M.run()
 		return
 	end
 
-	-- Dedicated floating terminal (count 9): output persists between runs.
-	require("toggleterm").exec(cmd, 9, nil, vim.fn.getcwd(), "float")
+	local Terminal = require("toggleterm.terminal").Terminal
+	local full = with_enter_prompt(cmd)
+
+	if run_term then
+		-- Rerun while previous session still open: kill it, start fresh.
+		if run_term:is_open() then
+			run_term:shutdown()
+		end
+		run_term.cmd = full
+		run_term:toggle()
+	else
+		run_term = Terminal:new({
+			cmd = full,
+			count = 9,
+			direction = "float",
+			float_opts = { border = "rounded" },
+			close_on_exit = true,
+			on_open = function()
+				vim.cmd("startinsert!")
+			end,
+		})
+		run_term:toggle()
+	end
 end
 
--- F6: debug the current file (delegates to nvim-dap; adapter per filetype).
+-- F6 / <leader>dc: debug the current file (nvim-dap; adapter per filetype).
 function M.debug()
 	require("dap").continue()
 end
