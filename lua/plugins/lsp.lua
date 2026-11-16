@@ -1,6 +1,6 @@
 return {
 	{
-		"williamboman/mason.nvim",
+		"mason-org/mason.nvim",
 		cmd = { "Mason", "MasonInstall", "MasonUpdate" },
 		config = function()
 			require("mason").setup({
@@ -30,12 +30,11 @@ return {
 	},
 
 	{
-		"williamboman/mason-lspconfig.nvim",
+		"mason-org/mason-lspconfig.nvim",
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("mason-lspconfig").setup({
 				ensure_installed = { "pyright", "clangd", "ruff", "html", "cssls", "ts_ls", "lua_ls" },
-				automatic_installation = true,
 			})
 		end,
 	},

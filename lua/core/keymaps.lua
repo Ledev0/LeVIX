@@ -36,8 +36,6 @@ keymap("n", "<leader>v", "<cmd>enew<CR>", { desc = "New Buffer" })
 keymap("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next Buffer" })
 keymap("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Previous Buffer" })
 keymap("n", "<leader>x", "<cmd>bdelete<CR>", { desc = "Close current buffer" })
-keymap("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next Tab" })
-keymap("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Prev Tab" })
 
 -- ============================================================
 --  Find / Search  (<leader>f)
@@ -61,7 +59,7 @@ keymap("n", "<leader>gg", "<cmd>lua LeVIX.lazygit_toggle()<CR>", { desc = "Toggl
 -- ============================================================
 --  Code / LSP  (<leader>c)
 -- ============================================================
-keymap("n", "<leader>cf", function() require("conform").format({ async = true }) end, { desc = "Format File" })
+keymap("n", "<leader>cf", function() require("conform").format({ timeout_ms = 3000, lsp_fallback = true }) end, { desc = "Format File" })
 keymap("n", "<leader>cl", function()
 	local lint = require("lint")
 	local ft = vim.bo.filetype
@@ -107,8 +105,8 @@ keymap("n", "<leader>ar", "<cmd>MarkdownPreviewRefresh<CR>", { desc = "Markdown 
 -- ============================================================
 --  Sessions  (<leader>s)
 -- ============================================================
-keymap("n", "<leader>ss", "<cmd>SessionSave<CR>", { desc = "Save Session" })
-keymap("n", "<leader>sr", "<cmd>SessionRestore<CR>", { desc = "Restore Session" })
+keymap("n", "<leader>ss", "<cmd>AutoSession save<CR>", { desc = "Save Session" })
+keymap("n", "<leader>sr", "<cmd>AutoSession restore<CR>", { desc = "Restore Session" })
 
 -- ============================================================
 --  Todos  (<leader>m)
@@ -156,7 +154,7 @@ keymap("n", "<leader>T", function()
 			end,
 		})
 	else
-		local themes = { "catppuccin", "tokyonight", "gruvbox", "rose-pine", "kanagawa" }
+		local themes = { "catppuccin", "tokyonight", "gruvbox", "rose-pine", "kanagawa", "miasma", "darkvoid", "midnight", "monokai" }
 		vim.ui.select(themes, { prompt = " Select LeVIX Theme:" }, function(choice)
 			if choice then
 				pcall(vim.cmd, "colorscheme " .. choice)

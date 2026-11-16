@@ -16,7 +16,9 @@ return {
 	{
 		"saghen/blink.cmp",
 		version = "*",
-		build = "cargo build --release",
+		-- No `build = "cargo build --release"`: release pins ship with prebuilt
+		-- fuzzy binaries (downloaded at runtime by blink.cmp). Building from
+		-- source is only needed when tracking the main branch.
 		dependencies = {
 			"saghen/blink.lib",
 			"L3MON4D3/LuaSnip",
@@ -40,7 +42,14 @@ return {
 					},
 				},
 				sources = {
-					default = { "lsp", "path", "snippets", "buffer", "spell" },
+					default = { "lsp", "path", "snippets", "buffer" },
+					-- Spell suggestions cost per keystroke; only enable them where
+					-- spellcheck is on (core/options.lua spell FileType autocmd).
+					per_filetype = {
+						markdown = { inherit_defaults = true, "spell" },
+						text = { inherit_defaults = true, "spell" },
+						gitcommit = { inherit_defaults = true, "spell" },
+					},
 					providers = {
 						spell = {
 							name = "Spell",

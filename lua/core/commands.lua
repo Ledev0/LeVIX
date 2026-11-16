@@ -58,7 +58,7 @@ local function check_for_updates()
 	vim.fn.jobstart({ "git", "-C", config_path, "fetch", "origin", "main" }, {
 		on_exit = function(_, exit_code)
 			if exit_code == 0 then
-				vim.fn.jobstart({ "git", "-C", config_path, "rev-list", "HEAD...origin/main", "--count" }, {
+				vim.fn.jobstart({ "git", "-C", config_path, "rev-list", "HEAD..origin/main", "--count" }, {
 					stdout_buffered = true,
 					on_stdout = function(_, data)
 						local count = tonumber(data[1] or "0")

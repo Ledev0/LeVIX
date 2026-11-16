@@ -31,8 +31,7 @@ function M.check()
 	check_executable("eslint_d", "npm install -g eslint_d")
 
 	vim.health.start("LeVIX — Build Requirements")
-	check_executable("cargo", "Required to build blink.cmp's fuzzy matcher")
-	check_executable("make", "Required for Treesitter parsers")
+	check_executable("make", "Required for telescope-fzf-native and Treesitter parsers")
 
 	vim.health.start("LeVIX — Runtime")
 	if vim.fn.has("nvim-0.12") == 1 then

@@ -192,7 +192,9 @@ function M.new_from_template(template_dir, project_name, project_type, files_to_
 		end
 	end
 
-	vim.cmd("cd " .. project_path)
+	-- chdir, not vim.cmd("cd " .. path): project name is user input and must
+	-- never be interpreted as command syntax.
+	vim.fn.chdir(project_path)
 	vim.cmd("Oil")
 
 	print_summary(project_name, project_path, project_type, npm_needed, npm_command)

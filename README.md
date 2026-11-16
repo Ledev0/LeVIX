@@ -148,9 +148,9 @@ Java configuration lives in two files:
 
 ### LSP Infrastructure
 
-**`williamboman/mason.nvim`** — LSP/DAP/linter/formatter installer. Loaded via `:Mason` command. Rounded UI border. Custom icons for installed/pending/uninstalled.
+**`mason-org/mason.nvim`** — LSP/DAP/linter/formatter installer. Loaded via `:Mason` command. Rounded UI border. Custom icons for installed/pending/uninstalled.
 
-**`williamboman/mason-lspconfig.nvim`** — Bridges Mason to lspconfig. Ensures these LSP servers are installed: pyright, clangd, ruff, html, cssls, ts_ls.
+**`mason-org/mason-lspconfig.nvim`** — Bridges Mason to lspconfig. Ensures these LSP servers are installed: pyright, clangd, ruff, html, cssls, ts_ls.
 
 **`neovim/nvim-lspconfig`** — LSP configuration using Neovim 0.12+ native `vim.lsp.config()` and `vim.lsp.enable()`. Configures: pyright (basic type checking), ruff, clangd, html, cssls, ts_ls. Sets up `LspAttach` autocommand for buffer-local keymaps.
 
@@ -164,7 +164,7 @@ Java configuration lives in two files:
 
 ### Completion
 
-**`saghen/blink.cmp`** — Autocompletion engine. Sources: lsp, path, snippets, buffer, spell. Keymaps: Tab/S-Tab for navigation, Enter to accept, C-space to show/hide. Signature help enabled. Built with `cargo build --release` on install.
+**`saghen/blink.cmp`** — Autocompletion engine. Sources: lsp, path, snippets, buffer (spell only in markdown/text/gitcommit via `per_filetype`). Keymaps: Tab/S-Tab for navigation, Enter to accept, C-space to show/hide. Signature help enabled. No cargo build needed — release pins ship prebuilt fuzzy binaries (downloaded at runtime).
 
 **`saghen/blink.lib`** — Native library dependency for blink.cmp.
 
@@ -196,8 +196,6 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 **`folke/snacks.nvim`** — Dashboard with LeVIX ASCII logo. Key shortcuts: f=Find File, r=Recent Files, g=Find Text, c=Config, l=Lazy, m=Mason, q=Quit. Image support disabled. `lazy = false`, `priority = 1000`.
 
-**`echasnovski/mini.icons`** — Icon provider.
-
 **`nvim-tree/nvim-web-devicons`** — Icon provider (used by oil.nvim, lualine.nvim, bufferline.nvim, aerial.nvim).
 
 ### Navigation & Search
@@ -222,7 +220,7 @@ DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on te
 
 ### Sessions
 
-**`rmagatti/auto-session`** — Session management. Auto-restore disabled by default. Suppressed dirs: `~/`, `~/Downloads`, `/`.
+**`rmagatti/auto-session`** — Session management. Lazy-loaded on `:AutoSession` command. Auto-save and auto-restore disabled (manual `<leader>ss`/`<leader>sr` workflow). Suppressed dirs: `~/`, `~/Downloads`, `/`.
 
 ### Theme Management
 
@@ -379,8 +377,6 @@ All keymaps are defined in a single file organized by group. Plugin files only h
 | `p` (visual) | `"_dP` | Paste without yanking |
 | `<S-l>` | `:bnext` | Next buffer |
 | `<S-h>` | `:bprevious` | Previous buffer |
-| `<Tab>` | `BufferLineCycleNext` | Next tab |
-| `<S-Tab>` | `BufferLineCyclePrev` | Previous tab |
 | `<leader>x` | `:bdelete` | Close current buffer |
 | `<Esc>` | `:nohlsearch` | Clear search highlight (defined in `core/options.lua`) |
 

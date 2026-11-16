@@ -7,6 +7,12 @@ vim.g.maplocalleader = " "
 -- Nerd Font
 vim.g.have_nerd_font = true
 
+-- Disable unused remote-provider interfaces (startup perf; :py/:perl/:node unused)
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
+vim.g.loaded_ruby_provider = 0
+
 -- Line numbers
 vim.o.number = true
 vim.o.relativenumber = true
@@ -49,17 +55,6 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- Diagnostics
 vim.diagnostic.config({
 	virtual_text = true,
-	signs = true,
-	underline = true,
-	update_in_insert = false,
-	severity_sort = true,
-	float = {
-		border = "rounded",
-		source = true,
-	},
-})
-
-vim.diagnostic.config({
 	signs = {
 		text = {
 			[vim.diagnostic.severity.ERROR] = "",
@@ -67,6 +62,13 @@ vim.diagnostic.config({
 			[vim.diagnostic.severity.INFO] = "",
 			[vim.diagnostic.severity.HINT] = "",
 		},
+	},
+	underline = true,
+	update_in_insert = false,
+	severity_sort = true,
+	float = {
+		border = "rounded",
+		source = true,
 	},
 })
 
