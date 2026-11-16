@@ -1,7 +1,8 @@
 -- LeVIX Code Runner (F5 / <leader>dr)
 -- Runs the current file in a dedicated floating toggleterm (count 9, reused).
--- When the program exits it shows "Press ENTER to close" and closes on Enter.
--- Supports: java (single-file launcher, JDK 11+), c, cpp, python, bash.
+-- When the program exits the float shows "Press ENTER to close" and stays
+-- open until Enter is hit. Supports: java (single-file, JDK 11+), c, cpp,
+-- python, bash.
 
 local M = {}
 
@@ -18,10 +19,32 @@ local function compiled_cmd(compiler, file)
 	return string.format("%s -Wall %s -o %s && %s", compiler, file, vim.fn.shellescape(bin), vim.fn.shellescape(bin))
 end
 
--- After the program exits: wait for ENTER, then the shell exits and
--- close_on_exit shuts the float.
-local function with_enter_prompt(cmd)
-	return string.format('%s; printf "\\n[LeVIX] Press ENTER to close... "; read _', cmd)
+-- NOTE: no shell `read` here — toggleterm cmd-terminals get stdin EOF, so read
+-- returns instantly and the float closes. The prompt is printed as the shell's
+-- last act; the ENTER-to-close part is handled nvim-side in on_exit below.
+local function with_exit_prompt(cmd)
+	return string.format('%s; printf "\\n[LeVIX] Press ENTER to close... "', cmd)
+end
+
+local function make_term(full)
+	local Terminal = require("toggleterm.terminal").Terminal
+	return Terminal:new({
+		cmd = full,
+		count = 9,
+		direction = "float",
+		float_opts = { border = "rounded" },
+		-- Explicit: toggleterm's global default is true, which closed the float
+		-- the moment the shell exited. We keep the window and close on ENTER.
+		close_on_exit = false,
+		on_open = function()
+			vim.cmd("startinsert!")
+		end,
+		on_exit = function(term)
+			pcall(vim.keymap.set, "t", "<CR>", function()
+				term:close()
+			end, { buffer = term.bufnr, silent = true })
+		end,
+	})
 end
 
 function M.run()
@@ -53,29 +76,18 @@ function M.run()
 		return
 	end
 
-	local Terminal = require("toggleterm.terminal").Terminal
-	local full = with_enter_prompt(cmd)
+	local full = with_exit_prompt(cmd)
 
 	if run_term then
-		-- Rerun while previous session still open: kill it, start fresh.
+		-- Rerun (float open, program running or exited): reset and start fresh.
 		if run_term:is_open() then
 			run_term:shutdown()
 		end
-		run_term.cmd = full
-		run_term:toggle()
+		run_term = make_term(full)
 	else
-		run_term = Terminal:new({
-			cmd = full,
-			count = 9,
-			direction = "float",
-			float_opts = { border = "rounded" },
-			close_on_exit = true,
-			on_open = function()
-				vim.cmd("startinsert!")
-			end,
-		})
-		run_term:toggle()
+		run_term = make_term(full)
 	end
+	run_term:toggle()
 end
 
 -- F6 / <leader>dc: debug the current file (nvim-dap; adapter per filetype).
