@@ -23,6 +23,8 @@ return {
 			{ "<leader>c", group = "󰅪 Code/LSP" },
 			{ "<leader>t", group = "󰆍 Terminal Management" },
 			{ "<leader>d", group = " Debug" },
+			{ "<leader>dr", icon = "󰃬", desc = "Run File (same as F5)" },
+			{ "<leader>dc", icon = "󰃤", desc = "Debug: Continue (same as F6)" },
 			{ "<leader>a", group = " Markdown Preview" },
 			{ "<leader>T", group = "Theme Switcher" },
 
