@@ -16,7 +16,14 @@ return {
 				root_dir = root_dir,
 				capabilities = require("blink.cmp").get_lsp_capabilities(),
 				on_attach = function(client, bufnr)
+					local dap = require("dap")
 					require("jdtls").setup_dap({ hotcodereplace = "auto" })
+					-- Pause at first line so the DAP UI stays open for breakpoints/stepping
+					vim.schedule(function()
+						for _, cfg in ipairs(dap.configurations.java or {}) do
+							cfg.stopOnEntry = true
+						end
+					end)
 				end,
 			}
 

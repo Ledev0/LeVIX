@@ -175,12 +175,12 @@ Java configuration lives in two files:
 ### Debugging
 
 **`mfussenegger/nvim-dap`** — Debug Adapter Protocol client. Configured adapters:
-- codelldb (C/C++): server mode, port-based, executable from Mason install path
-- nvim-dap-python (Python): uses `python3` executable
+- codelldb (C/C++): server mode, port-based, executable from Mason install path; stops on entry
+- nvim-dap-python (Python): dedicated venv with debugpy auto-bootstrapped into `~/.local/share/nvim/levix-dap-venv` on first F6 (system pip is PEP 668-locked); stops on entry
 - bashdb (bash/sh): Mason's `bash-debug-adapter`, bashdb script from package dir
-- Java via jdtls DAP (set up on LSP attach)
+- Java via jdtls DAP (set up on LSP attach); stops on entry
 
-Run with `<F5>` (`core/levix/runner.lua` — python/bash/java interpreted, c/cpp compiled to temp binary), debug with `<F6>`.
+All launch configs pause at the first line (`stopOnEntry = true`) so the DAP UI stays open — set breakpoints, then F6 to continue. Without this, trivial programs run to completion and the UI closes instantly.
 
 DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on termination.
 
