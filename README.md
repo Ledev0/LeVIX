@@ -62,7 +62,7 @@ Loading order:
 - timeoutlen: 300ms
 - Scrolloff: 8
 - Folding: disabled (`foldenable = false`)
-- Background: transparent — `lua/core/levix/transparency.lua` clears hl-group backgrounds (Normal, NormalFloat, NormalNC, SignColumn, LineNr, StatusLine, TabLine, FloatBorder, etc.) so the host terminal's transparency shows through (e.g. foot). Re-applied on `ColorScheme`/`UIEnter`. Toggle with `:LeVIXTransparency`. Pmenu/PmenuSel stay opaque for readability.
+- Background: opaque by default — `lua/core/levix/transparency.lua` can clear hl-group backgrounds (Normal, NormalFloat, NormalNC, SignColumn, LineNr, StatusLine, TabLine, FloatBorder, etc.) so the host terminal's transparency shows through (e.g. foot). Off by default; enable with `:LeVIXTransparency` (or set `vim.g.levix_transparency = true` for permanent on). Re-applied on `ColorScheme`/`UIEnter` when enabled. Pmenu/PmenuSel stay opaque for readability.
 - Spell checking: enabled for markdown, text, and gitcommit (`lang: en_us`)
 - Diagnostics: virtual text, signs, underline; severity-sorted; rounded float border with source
 - Diagnostic signs: Nerd Font icons ( Error,  Warn,  Info,  Hint)

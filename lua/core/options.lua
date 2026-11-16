@@ -81,7 +81,10 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 -- Background Transparency (match host terminal, e.g. foot)
--- Re-applied automatically on colorscheme changes.
+-- Re-applied automatically on colorscheme changes when enabled.
+-- Off by default — enable per-session with :LeVIXTransparency, or set
+-- vim.g.levix_transparency = true here for permanent on.
+vim.g.levix_transparency = false
 require("core.levix.transparency").setup()
 
 -- Theme Cache
