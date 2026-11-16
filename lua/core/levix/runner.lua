@@ -44,8 +44,8 @@ function M.run()
 		return
 	end
 
-	-- Dedicated terminal count 9: output persists between runs.
-	require("toggleterm").exec(cmd, 9, 15, vim.fn.getcwd(), "horizontal")
+	-- Dedicated floating terminal (count 9): output persists between runs.
+	require("toggleterm").exec(cmd, 9, nil, vim.fn.getcwd(), "float")
 end
 
 -- F6: debug the current file (delegates to nvim-dap; adapter per filetype).
