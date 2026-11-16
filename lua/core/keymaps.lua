@@ -168,3 +168,10 @@ end, { desc = "Switch Theme" })
 --  Zen Mode  (<leader>z)
 -- ============================================================
 keymap("n", "<leader>z", "<cmd>ZenMode<cr>", { desc = "Toggle Zen Mode" })
+
+-- ============================================================
+--  Run & Debug
+-- ============================================================
+keymap("n", "<F5>", function()
+	require("core.levix.runner").run()
+end, { desc = "Run File" })

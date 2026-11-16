@@ -16,6 +16,8 @@ return {
 		})
 
 		require("which-key").add({
+			{ "<F5>", icon = "󰃬", desc = "Run File (toggleterm)" },
+			{ "<F6>", icon = "󰃤", desc = "Debug: Continue (DAP)" },
 			{ "<leader>f", group = "󰍉 Find/Search" },
 			{ "<leader>g", group = "󰊢 Git Engine" },
 			{ "<leader>c", group = "󰅪 Code/LSP" },

@@ -2,7 +2,7 @@ return {
 	{
 		"mfussenegger/nvim-dap",
 		keys = {
-			{ "<F5>", function() require("dap").continue() end, desc = "Debug: Continue" },
+			{ "<F6>", function() require("core.levix.runner").debug() end, desc = "Debug: Continue" },
 			{ "<F10>", function() require("dap").step_over() end, desc = "Debug: Step Over" },
 			{ "<F11>", function() require("dap").step_into() end, desc = "Debug: Step Into" },
 			{ "<F12>", function() require("dap").step_out() end, desc = "Debug: Step Out" },
@@ -21,7 +21,7 @@ return {
 			dapui.setup()
 
 			require("mason-nvim-dap").setup({
-				ensure_installed = { "codelldb" },
+				ensure_installed = { "codelldb", "bash-debug-adapter" },
 				automatic_installation = true,
 			})
 
@@ -63,6 +63,38 @@ return {
 				},
 			}
 			dap.configurations.c = dap.configurations.cpp
+
+			-- Bash debugging via Mason's bash-debug-adapter (vscode-bash-debug).
+			local ok_bash, bashpkg = pcall(mason_registry.get_package, "bash-debug-adapter")
+			if ok_bash and bashpkg:is_installed() then
+				local bashdb_dir = bashpkg:get_install_path() .. "/extension/bashdb_dir"
+
+				dap.adapters.bashdb = {
+					type = "executable",
+					command = "bash-debug-adapter", -- Mason bin dir is on PATH
+					name = "bashdb",
+				}
+				local bash_config = {
+					name = "Launch file",
+					type = "bashdb",
+					request = "launch",
+					showDebugOutput = true,
+					pathBashdb = bashdb_dir .. "/bashdb",
+					pathBashdbLib = bashdb_dir,
+					trace = true,
+					fsRepr = "pretty-print",
+					program = "${file}",
+					cwd = "${workspaceFolder}",
+				}
+				dap.configurations.sh = { bash_config }
+				dap.configurations.bash = dap.configurations.sh
+			else
+				vim.notify(
+					"LeVIX: bash-debug-adapter not installed yet. Run :Mason to install it.",
+					vim.log.levels.WARN,
+					{ title = "LeVIX Debugger" }
+				)
+			end
 
 			dap.listeners.after.event_initialized["dapui_config"] = function()
 				dapui.open()

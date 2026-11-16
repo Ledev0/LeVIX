@@ -177,10 +177,14 @@ Java configuration lives in two files:
 **`mfussenegger/nvim-dap`** — Debug Adapter Protocol client. Configured adapters:
 - codelldb (C/C++): server mode, port-based, executable from Mason install path
 - nvim-dap-python (Python): uses `python3` executable
+- bashdb (bash/sh): Mason's `bash-debug-adapter`, bashdb script from package dir
+- Java via jdtls DAP (set up on LSP attach)
+
+Run with `<F5>` (`core/levix/runner.lua` — python/bash/java interpreted, c/cpp compiled to temp binary), debug with `<F6>`.
 
 DAP UI (`rcarriga/nvim-dap-ui`) opens automatically on debug start, closes on termination.
 
-**`jay-babu/mason-nvim-dap.nvim`** — Ensures `codelldb` is installed via Mason.
+**`jay-babu/mason-nvim-dap.nvim`** — Ensures `codelldb` and `bash-debug-adapter` are installed via Mason.
 
 **`mfussenegger/nvim-dap-python`** — Python DAP adapter.
 
@@ -435,11 +439,12 @@ All keymaps are defined in a single file organized by group. Plugin files only h
 | `<leader>cl` | Lint file (nvim-lint) |
 | `<leader>co` | Toggle code outline (aerial.nvim) |
 
-### Debug (defined in `lua/plugins/debugger.lua`)
+### Run & Debug
 
 | Key | Description |
 |-----|-------------|
-| `<F5>` | Continue debugger |
+| `<F5>` | Run file (python, bash, java single-file, c/cpp compile+run via `core/levix/runner.lua`, output in horizontal toggleterm) |
+| `<F6>` | Continue debugger |
 | `<F10>` | Step over |
 | `<F11>` | Step into |
 | `<F12>` | Step out |
