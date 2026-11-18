@@ -26,12 +26,13 @@ local function with_exit_prompt(cmd)
 	return string.format('%s; printf "\\n[LeVIX] Press ENTER to close... "', cmd)
 end
 
-local function make_term(full)
+local function make_term(full, cwd)
 	local Terminal = require("toggleterm.terminal").Terminal
 	return Terminal:new({
 		cmd = full,
 		count = 9,
 		direction = "float",
+		dir = cwd,
 		float_opts = { border = "rounded" },
 		-- Explicit: toggleterm's global default is true, which closed the float
 		-- the moment the shell exited. We keep the window and close on ENTER.
@@ -45,6 +46,22 @@ local function make_term(full)
 			end, { buffer = term.bufnr, silent = true })
 		end,
 	})
+end
+
+--- Run a shell command in the shared LeVIX float (ENTER to close).
+--- Used by F5 and by the C++ build module (run-after-build).
+---@param cmd string shell command (callers must shellescape untrusted parts)
+---@param cwd? string working directory
+function M.exec_cmd(cmd, cwd)
+	local full = with_exit_prompt(cmd)
+	-- shutdown() (close + delete_buf + delete(id)) is required: close() alone
+	-- leaves the terminal registered under count 9, so Terminal:new() would
+	-- return the dead object and the next run would show stale output.
+	if run_term then
+		run_term:shutdown()
+	end
+	run_term = make_term(full, cwd)
+	run_term:toggle()
 end
 
 function M.run()
@@ -76,18 +93,7 @@ function M.run()
 		return
 	end
 
-	local full = with_exit_prompt(cmd)
-
-	if run_term then
-		-- Rerun (float open, program running or exited): reset and start fresh.
-		if run_term:is_open() then
-			run_term:shutdown()
-		end
-		run_term = make_term(full)
-	else
-		run_term = make_term(full)
-	end
-	run_term:toggle()
+	M.exec_cmd(cmd)
 end
 
 -- F6 / <leader>dc: debug the current file (nvim-dap; adapter per filetype).

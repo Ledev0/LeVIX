@@ -53,7 +53,42 @@ return {
 				},
 			})
 			vim.lsp.config("ruff", {})
-			vim.lsp.config("clangd", {})
+			-- clangd: system binary preferred over Mason's, compile_commands.json
+			-- and --query-driver wired from detected compilers (core/levix/cpp/clangd.lua).
+			-- nvim 0.12: a function `cmd` must return an RPC client, so we start it here.
+			vim.lsp.config("clangd", {
+				-- CMakeLists.txt is missing from lspconfig's defaults, so a
+				-- non-git CMake project would get no root at all and clangd
+				-- would never see build/compile_commands.json.
+				root_markers = {
+					"compile_commands.json",
+					"compile_flags.txt",
+					"CMakeLists.txt",
+					".clangd",
+					".clang-tidy",
+					".clang-format",
+					".git",
+				},
+				cmd = function(dispatchers, config)
+					local cfg = config or {}
+					local ok, cpp_clangd = pcall(require, "core.levix.cpp.clangd")
+					local root = cfg.root_dir
+					if not root then
+						-- Derive the project root from the buffer when LSP found none.
+						local name = vim.api.nvim_buf_get_name(0)
+						local ok_project, project = pcall(require, "core.levix.cpp.project")
+						if name ~= "" and ok_project then
+							root = project.find_cmake_root(vim.fs.dirname(name))
+						end
+					end
+					local argv = (ok and cpp_clangd.build_cmd(root)) or { "clangd" }
+					return vim.lsp.rpc.start(argv, dispatchers, {
+						cwd = cfg.cmd_cwd,
+						env = cfg.cmd_env,
+						detached = cfg.detached,
+					})
+				end,
+			})
 			vim.lsp.config("html", {})
 			vim.lsp.config("cssls", {})
 			vim.lsp.config("ts_ls", {})

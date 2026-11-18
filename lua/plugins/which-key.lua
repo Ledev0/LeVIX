@@ -19,6 +19,7 @@ return {
 			{ "<leader>f", group = "󰍉 Find/Search" },
 			{ "<leader>g", group = "󰊢 Git Engine" },
 			{ "<leader>c", group = "󰅪 Code/LSP" },
+			{ "<leader>b", group = "C++ Build" },
 			{ "<leader>t", group = "󰆍 Terminal Management" },
 			{ "<leader>d", group = " Debug" },
 			{ "<leader>a", group = " Markdown Preview" },

@@ -33,6 +33,46 @@ function M.check()
 	vim.health.start("LeVIX — Build Requirements")
 	check_executable("make", "Required for telescope-fzf-native and Treesitter parsers")
 
+	vim.health.start("LeVIX — C++ Build")
+	if vim.fn.executable("cmake") == 1 then
+		vim.health.ok("cmake found")
+	else
+		vim.health.warn("cmake not found — CMake projects unavailable (single-file still works)")
+	end
+	if vim.fn.executable("ninja") == 1 then
+		vim.health.ok("ninja found (preferred CMake generator)")
+	else
+		vim.health.info("ninja not found — CMake falls back to the default generator")
+	end
+	local ok_build, cpp_build = pcall(require, "core.levix.cpp.build")
+	if not ok_build then
+		vim.health.error("core.levix.cpp.build failed to load: " .. tostring(cpp_build))
+	else
+		local compiler = cpp_build.find_compiler()
+		if compiler then
+			vim.health.ok("C++ compiler: " .. compiler)
+		else
+			vim.health.error("no C++ compiler found", { "Install g++ or clang++" })
+		end
+		local c_compiler = cpp_build.find_compiler_for("c")
+		if c_compiler then
+			vim.health.ok("C compiler: " .. c_compiler)
+		else
+			vim.health.warn("no C compiler found", { "Install gcc or clang (needed for .c files)" })
+		end
+	end
+	local ok_clangd, cpp_clangd = pcall(require, "core.levix.cpp.clangd")
+	if not ok_clangd then
+		vim.health.error("core.levix.cpp.clangd failed to load: " .. tostring(cpp_clangd))
+	else
+		local clangd = cpp_clangd.resolve_executable()
+		if clangd then
+			vim.health.ok("clangd: " .. clangd)
+		else
+			vim.health.warn("clangd not found", { "Install clangd (system package or Mason)" })
+		end
+	end
+
 	vim.health.start("LeVIX — Runtime")
 	if vim.fn.has("nvim-0.12") == 1 then
 		vim.health.ok("Neovim version >= 0.12")

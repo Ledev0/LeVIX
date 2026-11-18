@@ -356,6 +356,50 @@ Toggles the transparent background (implemented in `lua/core/levix/transparency.
 
 ---
 
+## C++ Build Module
+
+A dedicated C++ workflow (first slice of C++ Overkill Mode) in `lua/core/levix/cpp/`. Detects CMake vs single-file projects, builds asynchronously, and runs/debugs the binary produced by the **same** build operation — a failed build can never run a stale executable, and a picked artifact older than a build that actually linked is flagged.
+
+### Files
+
+| File | Responsibility |
+|---|---|
+| `project.lua` | Detects project root, CMake vs single-file, current source |
+| `build.lua` | Async builds (argv tables, no shell strings), quickfix parsing, executable discovery, safe clean |
+| `debug.lua` | codelldb launch against the built binary (no manual path prompt) |
+| `clangd.lua` | System-first clangd resolution, `--background-index`, `--compile-commands-dir`, `--query-driver` |
+| `init.lua` | `:LeVIXCpp*` commands + buffer-local keymaps |
+
+### `:LeVIXCpp*` commands
+
+| Command | Behavior |
+|---|---|
+| `:LeVIXCppConfigure` | Configure CMake (`-S <root> -B <root>/build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON`, Ninja when installed, `CMAKE_BUILD_TYPE=Debug` only on fresh caches) |
+| `:LeVIXCppBuild` | Build current project (auto-configures when the cache or `compile_commands.json` is missing; refuses overlapping builds) |
+| `:LeVIXCppRun` | Build, then run — single-file in `~/.cache/nvim/levix/cpp/<hash>/`, CMake from `<build>/`; output in the shared LeVIX float (ENTER closes) |
+| `:LeVIXCppDebug` | Build, then debug the produced binary with codelldb (stops on entry) |
+| `:LeVIXCppClean` | Clean `<root>/build` (requires `CMakeLists.txt`, refuses `/` and `$HOME`, needs UI confirmation) or the single-file cache dir |
+
+Keymaps (buffer-local, C/C++ buffers): `<leader>bc` configure, `<leader>bb` build, `<leader>br` build & run, `<leader>bd` build & debug, `<leader>bx` clean.
+
+### Single-file mode
+
+`g++`/`clang++`/`c++` auto-detected; flags `-g -Wall -Wextra -std=c++20`; binaries go to a hashed cache dir, never next to the source. `.c` files use a C driver (`gcc`/`clang`/`cc`) with `-std=c17`, headers are not buildable. Args are always passed as argv lists — paths with spaces are safe.
+
+### CMake mode
+
+`CMakeLists.txt` detected by walking upward; dedicated `<root>/build` dir preserved across builds (generator/build type never overridden once a cache exists). After a build the module walks the build tree (depth ≤ 3) for executables — a single match is used directly, multiple matches open a `vim.ui.select` picker instead of guessing. Libraries (`*.so*`, `*.a`, `*.o`), `CMakeFiles/`, `_deps/` and `Testing/` are ignored; candidates are sorted newest first.
+
+### Errors & navigation
+
+Build output appears in a floating window (quickfix list populated from `file:line[:col]: severity: message`, relative paths resolved against the build cwd and the list cleared on success); build failures are notified distinctly from execution failures. Compiler output is preserved in the float on failure; suppressed on success when chained from run/debug.
+
+### Tests
+
+`nvim --headless -u tests/minimal_init.lua -l tests/cpp/test_cpp.lua` — 32 headless checks (detection incl. headers and case-insensitive extensions, paths with spaces, C/C++ command construction, spawn failures without tracebacks, failed build never reaching the run path, real build+run binary identity, staleness, quickfix, ambiguous executables and library filtering, clean safety incl. refusal paths, clangd args, real CMake configure/build integration). Tool-dependent cases report `skip` with a reason when a binary is absent; temp dirs only, never user projects.
+
+---
+
 ## Keybindings
 
 ### Global Keymaps (`lua/core/keymaps.lua`)
@@ -450,6 +494,16 @@ All keymaps are defined in a single file organized by group. Plugin files only h
 | `<F12>` | Step out |
 | `<leader>db` | Toggle breakpoint |
 | `<leader>du` | Toggle debug UI |
+
+### C++ Build (buffer-local, `lua/core/levix/cpp/init.lua`)
+
+| Key | Description |
+|-----|-------------|
+| `<leader>bc` | Configure CMake |
+| `<leader>bb` | Build project |
+| `<leader>br` | Build & run |
+| `<leader>bd` | Build & debug |
+| `<leader>bx` | Clean build artifacts |
 
 ### Live Server (defined in `lua/plugins/live-server.lua`)
 

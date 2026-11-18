@@ -1,6 +1,15 @@
 -- Import the newweb module
 local newweb = require("core.levix.newweb")
 
+-- Import the C++ build module (registers :LeVIXCpp* commands + c/cpp keymaps).
+-- Guarded: a load error here must not take down the rest of the commands.
+local ok_cpp, cpp = pcall(require, "core.levix.cpp")
+if ok_cpp then
+	pcall(cpp.setup)
+else
+	vim.notify("LeVIX: C++ module failed to load: " .. tostring(cpp), vim.log.levels.WARN)
+end
+
 -- LeVIXUpdate: Update LeVIX core, plugins, and Treesitter
 vim.api.nvim_create_user_command("LeVIXUpdate", function()
 	print(" [LeVIX] Starting core empire updates...")
