@@ -73,6 +73,23 @@ function M.check()
 		end
 	end
 
+	vim.health.start("LeVIX — C++ Debug")
+	do
+		local ok_mason, mason_registry = pcall(require, "mason-registry")
+		local codelldb_bin = nil
+		if ok_mason then
+			local ok_pkg, pkg = pcall(mason_registry.get_package, "codelldb")
+			if ok_pkg and pkg:is_installed() then
+				codelldb_bin = pkg:get_install_path() .. "/extension/adapter/codelldb"
+			end
+		end
+		if codelldb_bin and vim.fn.executable(codelldb_bin) == 1 then
+			vim.health.ok("codelldb: " .. codelldb_bin)
+		else
+			vim.health.warn("codelldb not available", { "Run :Mason and install codelldb for :LeVIXCppDebug" })
+		end
+	end
+
 	vim.health.start("LeVIX — Runtime")
 	if vim.fn.has("nvim-0.12") == 1 then
 		vim.health.ok("Neovim version >= 0.12")
